@@ -1,14 +1,13 @@
 -- migrate:up
 CREATE TABLE users (
-  id int NOT NULL AUTO_INCREMENT,
-  email varchar(50) NOT NULL,
-  name varchar(50) NOT NULL,
-  password varchar(50) NOT NULL,
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  email VARCHAR(50) NOT NULL,
+  name VARCHAR(50) NOT NULL,
+  password VARCHAR(50) NOT NULL,
   create_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  points decimal NULL,
   updated_at TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id)
+  points DECIMAL(10,0) DEFAULT NULL
 );
--- migrate:down
 
+-- migrate:down
 DROP TABLE users

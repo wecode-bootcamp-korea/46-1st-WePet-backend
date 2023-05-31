@@ -1,13 +1,18 @@
+# DB Schema
 db/schema.sql
+
+# Environment settings
 .env
 
 # Dependency directories
 node_modules/
 jspm_packages/
+
 # General
 .DS_Store
 .AppleDouble
 .LSOverride
+
 ### Node ###
 # Logs
 logs
