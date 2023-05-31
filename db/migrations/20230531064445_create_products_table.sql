@@ -5,7 +5,7 @@ CREATE TABLE products (
   product_price DECIMAL(8,2),
   product_description VARCHAR(200),
   product_category_id INT,
-  quantity INT
+  quantity INT DEFAULT 0
 );
 
 -- migrate:down

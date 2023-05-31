@@ -9,6 +9,5 @@ CREATE TABLE orders (
   FOREIGN KEY (order_status_id) REFERENCES order_status (id)
 );
 
-
 -- migrate:down
 DROP TABLE orders

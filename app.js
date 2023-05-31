@@ -1,4 +1,3 @@
-// 3rd-party package
 dotenv.config()
 import express from 'express'
 import cors from 'cors'
@@ -6,7 +5,6 @@ import morgan from 'morgan'
 import dotenv from 'dotenv'
 import { database } from './models/dataSource.js'
 
-// custom package
 import { globalErrorHandler } from './utils/errorHandler.js'
 import { router } from './routers/index.js'
 

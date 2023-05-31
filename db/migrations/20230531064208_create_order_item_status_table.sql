@@ -4,6 +4,5 @@ CREATE TABLE order_items_status (
   order_item_status_code VARCHAR(200) NOT NULL
 );
 
-
 -- migrate:down
 DROP TABLE order_items_status
