@@ -7,4 +7,5 @@ const router = Router()
 router.use('/users', userRouter)
 router.use('/products', productRouter)
 
+
 export { router }
