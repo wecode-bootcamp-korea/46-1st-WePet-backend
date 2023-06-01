@@ -1,16 +1,21 @@
 import { Router } from 'express'
-import { usersRouter } from './usersRouter.js'
 import { productsRouter } from './productsRouter.js'
+import { cartsRouter } from './cartsRouter.js'
 
 const router = Router()
 
 router.get('/', (req, res) => {
-  res.json({
-    message: 'this is test message for root endpoint',
-  })
+  const dogAscii = `  
+   __
+o-''|\\_____/)
+ \\_/|_)     )
+    \\  __  /
+    (_/ (_/ `
+
+  res.send(`<pre>${dogAscii}</pre>`)
 })
 
-router.use('/users', usersRouter)
 router.use('/products', productsRouter)
+router.use('/carts', cartsRouter)
 
 export { router }

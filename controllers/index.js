@@ -1,13 +1,4 @@
-import {
-  getProducts,
-  getProduct,
-  getProductById,
-} from './productsController.js'
+import * as productController from './productsController.js'
+import * as cartController from './cartsController.js'
 
-const controllers = {
-  getProducts: getProducts,
-  getProduct: getProduct,
-  getProductById: getProductById,
-}
-
-export default controllers
+export { productController, cartController }

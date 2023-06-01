@@ -9,7 +9,7 @@ import { globalErrorHandler } from './utils/errorHandler.js'
 import { router } from './routers/index.js'
 
 const app = express()
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 8000
 
 app.use(cors())
 app.use(morgan('dev'))
