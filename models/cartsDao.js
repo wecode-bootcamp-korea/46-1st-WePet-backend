@@ -22,10 +22,29 @@ const queryCartItems = async (userId) => {
     )
     return data
   } catch {
-    const error = new Error('DATASOURCE_QUERY_ERROR')
+    const error = new Error('DATABASE_QUERY_ERROR')
     error.statusCode = 400
     throw error
   }
 }
 
-export { queryCartItems }
+const queryInsertItemToCart = async (userId, productId, productQuantity) => {
+  try {
+    const data = await database.query(
+      `INSERT INTO shopping_carts (
+      user_id,
+      product_id,
+      quantity
+    )
+    VALUES(?, ?, ?)`,
+      [userId, productId, productQuantity]
+    )
+    return data
+  } catch {
+    const error = new Error('DATABASE_QUERY_ERROR')
+    error.statusCode = 400
+    throw error
+  }
+}
+
+export { queryCartItems, queryInsertItemToCart }

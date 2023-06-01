@@ -16,7 +16,7 @@ const queryAllProducts = async () => {
     )
     return data
   } catch {
-    const error = new Error('DATASOURCE_QUERY_ERROR')
+    const error = new Error('DATABASE_QUERY_ERROR')
     error.statusCode = 400
     throw error
   }
@@ -41,7 +41,7 @@ const queryProductByCategoryId = async (queryId) => {
     )
     return data
   } catch {
-    const error = new Error('DATASOURCE_QUERY_ERROR')
+    const error = new Error('DATABASE_QUERY_ERROR')
     error.statusCode = 400
     throw error
   }
@@ -67,7 +67,7 @@ const queryProductById = async (productId) => {
     )
     return data
   } catch {
-    const error = new Error('DATASOURCE_QUERY_ERROR')
+    const error = new Error('DATABASE_QUERY_ERROR')
     error.statusCode = 400
     throw error
   }
