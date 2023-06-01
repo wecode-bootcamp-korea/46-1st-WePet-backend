@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { usersRouter } from './usersRouter.js'
+import  { usersRouter } from './usersRouter.js'
 import { productsRouter } from './productsRouter.js'
 
 const router = Router()
@@ -12,6 +12,5 @@ router.get('/', (req, res) => {
 
 router.use('/users', usersRouter)
 router.use('/products', productsRouter)
-
 
 export { router }

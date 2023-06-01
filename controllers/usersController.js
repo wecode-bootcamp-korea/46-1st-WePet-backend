@@ -1,4 +1,4 @@
-import { createUser } from '../service/userService.js'
+import { usersService } from '../services/index.js'
 
 const signUp = async (req, res) => {
   try {
@@ -6,7 +6,7 @@ const signUp = async (req, res) => {
     if (!email || !password || !name) {
       return res.status(400).json({ messge: 'KEY_ERROR' })
     }
-    await createUser(email, password, name)
+    await usersService.createUser(email, password, name)
     return res.status(201).json({ messge: 'SIGNUP_SUCCESS' })
   } catch (err) {
     console.log(err)
@@ -19,7 +19,7 @@ const login = async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({ messge: 'KEY_ERROR' })
     }
-    await userService.login(email, password)
+    await usersService.login(email, password)
   } catch (err) {
     console.log(err)
     return res.status(err.statusCode || 500).json({ message: err.message })

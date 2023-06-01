@@ -1,5 +1,5 @@
 import verify from 'jsonwebtoken'
-import getUserById from '../service'
+import { usersService } from '../services'
 
 const loginRequired = async (req, res, next) => {
 
@@ -17,7 +17,7 @@ const loginRequired = async (req, res, next) => {
   const decoded = await verify(accessToken, process.env.JWT_SECRET);
 
   // 3) Check if user still exists
-	const user = await userService.getUserById(decoded.sub)
+	const user = await usersService.getUserById(decoded.sub)
 
 	if (!user) {
 		const error = new Error('USER_DOES_NOT_EXIST')

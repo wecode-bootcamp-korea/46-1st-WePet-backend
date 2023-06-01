@@ -1,13 +1,4 @@
-import {
-  getAllProducts,
-  getProductByCategoryId,
-  getProductById,
-} from './productsService.js'
+import * as productsService from './productsService.js'
+import * as usersService from './usersService.js'
 
-const productServices = {
-  getAllProducts: getAllProducts,
-  getProductByCategoryId: getProductByCategoryId,
-  getProductById: getProductById,
-}
-
-export default productServices
+export { productsService, usersService }

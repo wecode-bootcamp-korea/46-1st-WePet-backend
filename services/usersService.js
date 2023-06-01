@@ -1,8 +1,9 @@
 import sign from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
-import { createUserDao, updateUser, deleteUser } from '../models/userDao.js'
 
-const createUser = async (email, password, name) => {
+import { createUserDao, getUserByEmail } from '../models/usersDao.js'
+
+const signUp = async (email, password, name) => {
   const pwValidation = new RegExp(
     '^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,20})'
   )
@@ -18,14 +19,9 @@ const createUser = async (email, password, name) => {
   return createUser
 }
 
-const getUserById = async (userId) => {
-
-}
-
-
 const login = async (email, password) => {
 
-  const user = await userDao.getUserByEmail(email);
+  const user = await getUserByEmail(email);
 
   if (!user) {
     const err = new Error('specified user does not exist');
@@ -44,4 +40,8 @@ const login = async (email, password) => {
   return sign({ sub: user.id, email: user.email }, process.env.JWT_SECRET);
 }
 
-export { createUser, updateUser, deleteUser, login }
+const getUserById = async () => {
+  
+}
+
+export { signUp, login, getUserById }
