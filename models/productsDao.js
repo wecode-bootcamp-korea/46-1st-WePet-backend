@@ -4,13 +4,14 @@ const queryAllProducts = async () => {
   try {
     const data = await database.query(
       `SELECT
-        products.product_name AS productName,
-        products.product_price AS productPrice,
-        products.product_description AS productDescription,
-        products.product_category_id AS productCategory,
-        products.quantity AS productQuantity,
-        products.image_url AS productImage
-      FROM products
+        p.product_name AS productName,
+        p.product_price AS productPrice,
+        p.product_description AS productDescription,
+        p.product_category_id AS productCategoryId,
+        p.quantity AS productQuantity,
+        p.main_image_thumbnail AS mainThumbnailImage
+      FROM
+        products AS p
       `
     )
     return data
@@ -25,14 +26,16 @@ const queryProductByCategoryId = async (queryId) => {
   try {
     const data = await database.query(
       `SELECT
-        products.product_name AS productName,
-        products.product_price AS productPrice,
-        products.product_description AS productDescription,
-        products.product_category_id AS productCategory,
-        products.quantity AS productQuantity,
-        products.image_url AS productImage
-        FROM products
-        WHERE product_category_id = ?
+        p.product_name AS productName,
+        p.product_price AS productPrice,
+        p.product_description AS productDescription,
+        p.product_category_id AS productCategoryId,
+        p.quantity AS productQuantity,
+        p.main_image_thumbnail AS mainThumbnailImage
+      FROM
+        products AS p
+      WHERE
+        p.product_category_id = ?
       `,
       [queryId]
     )
@@ -48,15 +51,17 @@ const queryProductById = async (productId) => {
   try {
     const data = await database.query(
       `SELECT
-        products.id AS productId,
-        products.product_name AS productName,
-        products.product_price AS productPrice,
-        products.product_description AS productDescription,
-        products.product_category_id AS productCategory,
-        products.quantity AS productQuantity,
-        products.image_url AS productImage
-        FROM products
-        WHERE id = ?
+        p.id AS productId,
+        p.product_name AS productName,
+        p.product_price AS productPrice,
+        p.product_description AS productDescription,
+        p.product_category_id AS productCategoryId,
+        p.quantity AS productQuantity,
+        p.main_image_thumbnail AS mainThumbnailImage
+       FROM 
+        products AS p
+       WHERE 
+        p.id = ?
     `,
       [productId]
     )

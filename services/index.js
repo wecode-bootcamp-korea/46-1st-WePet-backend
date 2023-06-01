@@ -4,10 +4,10 @@ import {
   getProductById,
 } from './productsService.js'
 
-const services = {
+const productServices = {
   getAllProducts: getAllProducts,
   getProductByCategoryId: getProductByCategoryId,
   getProductById: getProductById,
 }
 
-export default services
+export default productServices
