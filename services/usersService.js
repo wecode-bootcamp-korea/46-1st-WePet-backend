@@ -1,4 +1,4 @@
-import sign from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 
 import { createUserDao, getUserByEmail } from '../models/usersDao.js'
@@ -21,22 +21,22 @@ const signUp = async (email, password, name) => {
 
 const login = async (email, password) => {
   const user = await getUserByEmail(email)
-
+  console.log(user)
   if (!user) {
     const err = new Error('specified user does not exist')
     err.statusCode = 404
     throw err
   }
-
   const result = await bcrypt.compare(password, user.password)
+  console.log(result)
 
   if (!result) {
     const err = new Error('invalid password')
-    err.statusCode = 401
+    err.statusCode = 400
     throw err
   }
 
-  return sign({ sub: user.id, email: user.email }, process.env.JWT_SECRET)
+  return jwt.sign({ sub: user.id, email: user.email }, process.env.JWT_SECRET) //토큰을 생성!!
 }
 
 const getUserById = async (userId) => {
@@ -47,8 +47,16 @@ const getUserById = async (userId) => {
     err.statusCode = 404
     throw err
   }
-
   return user
 }
+// 사용자 정보 업데이트
 
-export { signUp, login, getUserById }
+
+//유저 정보 삭제
+
+
+export {
+  signUp,
+  login,
+  getUserById,
+}

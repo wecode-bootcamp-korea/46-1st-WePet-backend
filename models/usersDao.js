@@ -1,6 +1,7 @@
 import { database } from './dataSource.js'
 //유저 회원가입
 const createUserDao = async (email, password, name) => {
+  console.log(email,password,name)
   try {
     await database.query(
       `INSERT INTO users (
@@ -21,21 +22,22 @@ const createUserDao = async (email, password, name) => {
 //로그인
 const getUserByEmail = async (email) => {
   try {
-    const user = await database.query(
+    const [user] = await database.query(
       `SELECT 
+        u.id,
         u.email,
         u.password,
         u.name,
         u.points
-      FROM users u
-      WHERE u.email = ?
-      `,
-      [ email ]
+        FROM users u
+        WHERE u.email = ?
+        `,
+        [email]
     )
     return user
   } catch (err) {
     console.log(err)
-    const error = new Error('!')
+    const error = new Error('INVALID_DATA_INPUT')
     error.statusCode = 400
     throw error
   }
@@ -98,9 +100,8 @@ const deleteUser = async (email, password, name) => {
   }
 }
 
-export { createUserDao,
+export {
+  createUserDao,
   getUserByEmail,
-  updateUser,
-  deleteUser,
   getUserById,
 }
