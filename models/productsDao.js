@@ -4,6 +4,7 @@ const queryAllProducts = async () => {
   try {
     const data = await database.query(
       `SELECT
+        p.id AS productId,
         p.product_name AS productName,
         p.product_price AS productPrice,
         p.product_description AS productDescription,
@@ -26,6 +27,7 @@ const queryProductByCategoryId = async (queryId) => {
   try {
     const data = await database.query(
       `SELECT
+        p.id AS productId,
         p.product_name AS productName,
         p.product_price AS productPrice,
         p.product_description AS productDescription,

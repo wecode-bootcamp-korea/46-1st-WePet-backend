@@ -10,12 +10,12 @@ router.get('/', (req, res) => {
 o-''|\\_____/)
  \\_/|_)     )
     \\  __  /
-    (_/ (_/ `
-
+    (_/ (_/ 
+`
   res.send(`<pre>${dogAscii}</pre>`)
 })
 
 router.use('/products', productsRouter)
-router.use('/carts', cartsRouter)
+router.use('/shopping-cart', cartsRouter)
 
 export { router }
