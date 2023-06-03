@@ -6,9 +6,15 @@ const cartsRouter = Router()
 cartsRouter.get('/', cartController.getCartItems)
 cartsRouter.post('/', cartController.postItemToCart)
 cartsRouter.put('/', cartController.putItemQuantityInCart)
-cartsRouter.patch('/add', cartController.addItemQuantityInCart)
-cartsRouter.patch('/subtract', cartController.subtractItemQuantityInCart)
-cartsRouter.delete('/remove', cartController.deleteItemInCart)
-cartsRouter.delete('/clear', cartController.deleteAllItemInCart)
+cartsRouter.patch('/add/single-item', cartController.addItemQuantityInCart)
+cartsRouter.patch(
+  '/subtract/single-item',
+  cartController.subtractItemQuantityInCart
+)
+cartsRouter.delete(
+  '/remove/single-item/:productId',
+  cartController.deleteItemInCart
+)
+cartsRouter.delete('/remove/all-items', cartController.deleteAllItemInCart)
 
 export { cartsRouter }

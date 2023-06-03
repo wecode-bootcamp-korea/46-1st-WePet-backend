@@ -31,50 +31,65 @@ const queryCartItems = async (userId) => {
     return data
   } catch {
     const error = new Error('DATABASE_QUERY_ERROR')
-    error.statusCode = 400
+    error.statusCode = 500
     throw error
   }
 }
 
 const queryInsertItemToCart = async (userId, productId, productQuantity) => {
   try {
-    const data = await database.query(
+    const productQuantityData = await database.query(
       `
-      INSERT INTO 
-        shopping_carts 
-          (
-            user_id,
-            product_id,
-            quantity
-          )
-      VALUES(?, ?, ?)
+      SELECT quantity
+      FROM products
+      WHERE id = ?
       `,
-      [userId, productId, productQuantity]
+      [productId]
     )
-    return data
-  } catch {
-    const error = new Error('DATABASE_QUERY_ERROR')
-    error.statusCode = 400
-    throw error
-  }
-}
 
-const queryCartItem = async (userId, productId) => {
-  try {
-    const data = await database.query(
+    const availableQuantity = productQuantityData[0].quantity
+
+    const shoppingCartQuantityData = await database.query(
       `
-      SELECT
-        product_id
-      FROM
-        shopping_carts
-      WHERE
-        user_id = ?
+      SELECT COALESCE(SUM(quantity), 0) AS totalQuantity
+      FROM shopping_carts
+      WHERE user_id = ? AND product_id = ?
       `,
       [userId, productId]
     )
-    return data
-  } catch {
-    const error = new Error('DATABASE_QUERY_ERROR')
+
+    const shoppingCartQuantity = shoppingCartQuantityData[0].totalQuantity
+
+    if (
+      parseInt(shoppingCartQuantity) + parseInt(productQuantity) >
+      availableQuantity
+    ) {
+      throw new Error('CART_QUANTITY_EXCEEDS_AVAILABLE_QUANTITY')
+    }
+
+    try {
+      const data = await database.query(
+        `
+        INSERT INTO 
+          shopping_carts 
+            (
+              user_id,
+              product_id,
+              quantity
+            )
+        VALUES (?, ?, 1)
+        ON DUPLICATE KEY UPDATE
+          quantity = quantity + ?
+        `,
+        [userId, productId, productQuantity]
+      )
+      return data
+    } catch (dataError) {
+      const error = new Error('DATABASE_QUERY_ERROR')
+      error.statusCode = 500
+      throw error
+    }
+  } catch (error) {
     error.statusCode = 400
     throw error
   }
@@ -86,8 +101,24 @@ const queryUpdateItemQuantityInCart = async (
   productQuantity
 ) => {
   try {
-    const data = await database.query(
+    const availableQuantityData = await database.query(
       `
+      SELECT quantity AS maxQuantity
+      FROM products
+      WHERE id = ?
+      `,
+      [productId]
+    )
+
+    const availableQuantity = availableQuantityData[0].maxQuantity
+
+    if (productQuantity > availableQuantity) {
+      throw new Error('CART_QUANTITY_EXCEEDS_AVAILABLE_QUANTITY')
+    }
+
+    try {
+      const data = await database.query(
+        `
       UPDATE 
         shopping_carts
       SET
@@ -97,11 +128,16 @@ const queryUpdateItemQuantityInCart = async (
         AND
         product_id = ?
       `,
-      [productQuantity, userId, productId]
-    )
-    return data
-  } catch {
-    const error = new Error('DATABASE_QUERY_ERROR')
+        [productQuantity, userId, productId]
+      )
+
+      return data
+    } catch (dataError) {
+      const error = new Error('DATABASE_QUERY_ERROR')
+      error.statusCode = 500
+      throw error
+    }
+  } catch (error) {
     error.statusCode = 400
     throw error
   }
@@ -113,22 +149,53 @@ const queryAddItemQuantityInCart = async (
   productQuantity
 ) => {
   try {
-    const data = await database.query(
+    const checkResult = await database.query(
       `
-      UPDATE 
+      SELECT
+        sc.quantity AS cart_quantity,
+        p.quantity AS available_quantity
+      FROM
+        shopping_carts AS sc
+      INNER JOIN
+        products AS p ON sc.product_id = p.id
+      WHERE
+        sc.user_id = ?
+        AND
+        sc.product_id = ?
+      `,
+      [userId, productId]
+    )
+    const cartQuantity = checkResult[0].cart_quantity
+    const availableQuantity = checkResult[0].available_quantity
+
+    const desiredQuantity = cartQuantity + productQuantity
+
+    if (desiredQuantity > availableQuantity) {
+      throw new Error('CART_QUANTITY_EXCEEDS_AVAILABLE_QUANTITY')
+    }
+
+    try {
+      const data = await database.query(
+        `
+      UPDATE
         shopping_carts
       SET
-        quantity = quantity + ?
+        quantity = ?
       WHERE
         user_id = ?
         AND
         product_id = ?
       `,
-      [productQuantity, userId, productId]
-    )
-    return data
-  } catch {
-    const error = new Error('DATABASE_QUERY_ERROR')
+        [desiredQuantity, userId, productId]
+      )
+
+      return data
+    } catch (dataError) {
+      const error = new Error('DATABASE_QUERY_ERROR')
+      error.statusCode = 500
+      throw error
+    }
+  } catch (error) {
     error.statusCode = 400
     throw error
   }
@@ -140,22 +207,32 @@ const querySubtractItemQuantityInCart = async (
   productQuantity
 ) => {
   try {
-    const data = await database.query(
-      `
+    if (productQuantity <= 1) {
+      throw new Error('MINIMUM_QUANTITY_REACHED')
+    }
+
+    try {
+      const data = await database.query(
+        `
       UPDATE 
         shopping_carts
       SET
-        quantity = quantity - ?
+        quantity = IF(quantity - ? >= 1, quantity - ?, 1)
       WHERE
         user_id = ?
         AND
         product_id = ?
       `,
-      [productQuantity, userId, productId]
-    )
-    return data
-  } catch {
-    const error = new Error('DATABASE_QUERY_ERROR')
+        [productQuantity, productQuantity, userId, productId]
+      )
+
+      return data
+    } catch (dataError) {
+      const error = new Error('DATABASE_QUERY_ERROR')
+      error.statusCode = 500
+      throw error
+    }
+  } catch (error) {
     error.statusCode = 400
     throw error
   }
@@ -165,15 +242,12 @@ const queryDeleteItemInCart = async (userId, productId) => {
   try {
     const data = await database.query(
       `
-      UPDATE 
-        shopping_carts
-      SET
-        product_id = NULL,
-        quantity = 0
-      WHERE
-        user_id = ?
-        AND
-        product_id = ?
+        DELETE FROM 
+          shopping_carts
+        WHERE 
+          user_id = ?
+        AND 
+          product_id = ?
       `,
       [userId, productId]
     )
@@ -189,11 +263,8 @@ const queryDeleteAllItemInCart = async (userId) => {
   try {
     const data = await database.query(
       `
-      UPDATE
+      DELETE FROM
         shopping_carts
-      SET
-        product_id = NULL,
-        quantity = 0
       WHERE
         user_id = ?
       `,
@@ -210,7 +281,6 @@ const queryDeleteAllItemInCart = async (userId) => {
 export {
   queryCartItems,
   queryInsertItemToCart,
-  queryCartItem,
   queryUpdateItemQuantityInCart,
   queryAddItemQuantityInCart,
   querySubtractItemQuantityInCart,

@@ -1,7 +1,6 @@
 import {
   queryCartItems,
   queryInsertItemToCart,
-  queryCartItem,
   queryUpdateItemQuantityInCart,
   queryAddItemQuantityInCart,
   querySubtractItemQuantityInCart,
@@ -20,11 +19,6 @@ const postItemToCart = async (userId, productId, productQuantity) => {
     productId,
     productQuantity
   )
-  return queryData
-}
-
-const getCartItem = async (userId, productId) => {
-  const queryData = await queryCartItem(userId, productId)
   return queryData
 }
 
@@ -72,7 +66,6 @@ const deleteAllItemInCart = async (userId) => {
 export {
   getCartItems,
   postItemToCart,
-  getCartItem,
   putItemQuantityInCart,
   addItemQuantityInCart,
   subtractItemQuantityInCart,
