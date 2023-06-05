@@ -1,64 +1,55 @@
 import { usersService } from '../services/index.js'
 import { checkDuplicateEmail } from '../services/usersService.js'
-// 회원가입
-const signUp = async (req, res) => {
-  try {
+import { catchAsync } from '../utils/errorHandler.js'
+
+
+const signUp = catchAsync(async (req, res) => {
     const { email, password, name } = req.body
     const isDuplicateEmail = await checkDuplicateEmail(email);  
     if (!email || !password || !name) {
       return res.status(400).json({ messge: 'KEY_ERROR' })
-    } else if(isDuplicateEmail === true) {   //이메일 중복 확인
-      return res.status(400).json({messge: 'Duplicate email'})
+    } else if(isDuplicateEmail === true) {   
+      return res.status(400).json({messge: 'DUPLICATE EMAIL'})
     }
     const result = await usersService.signUp(email, password, name)
-    return res.status(201).json({ messge: 'SIGNUP_SUCCESS', result })
-  } catch (err) {
-    console.log(err)
-    return res.status(err.statusCode || 500).json({ messge: err.messge })
-  }
-}
-// 로그인
-const login = async (req, res) => {
-  try {
+    return res.status(200).json({ messge: 'SIGNUP_SUCCESS', result })
+  } 
+)
+
+const login = catchAsync(async (req, res) => {
     const { email, password } = req.body
     if (!email || !password) {
       return res.status(400).json({ messge: 'KEY_ERROR' })
     }
     const result = await usersService.login(email, password)
     return res.status(201).json({ messge: 'LOGIN_SUCCESS', result })
-  } catch (err) {
-    console.log(err)
-    return res.status(err.statusCode || 500).json({ message: err.message })
   }
-}
-
-// 사용자 정보 삭제
-const deleteUser = async (req, res, next) => {
-  try {
-    const userId = req.query.userId;
+)
+const deleteUser = catchAsync(async (req, res) => {
+  const userId  = req.user;
     const result = await usersService.deletedUser(userId);
-    res.status(200).json({ message: 'User deleted successfully',result });
-  } catch (error) {
-    next(error);
-    console.log(error)
+    return res.status(200).json({ message: 'USER DELETED SUCCESS', result });
   }
-};
-// 사용자 정보 수정
-const updateUser = async (req, res) => {
-  const { userId } = req.params;
-  const updatedUserData = req.body;
+)
+const updateUser = catchAsync(async (req, res) => {
+  const userId  = req.user;
+  const {email, password, name} = req.body;
+  const updatedResult = await usersService.updatedUser(userId, email, password, name);
+    return res.status(200).json({message:'UPDATE SUCCESS', updatedResult})
+  }
+)
 
-  try {
-    await updateUser(userId, updatedUserData);
-    res.sendStatus(200);
-  } catch (err) {
-    res.status(err.statusCode || 500).json({ error: err.message });
-  }
-};
+const address = catchAsync(async(req, res) => {
+  const userId  = req.user;
+  const userAddress = req.body;
+    await updateUser(userId, userAddress);
+    return res.sendStatus(200); 
+})
 
 export {
   signUp,
   login,
   deleteUser,
   updateUser,
+  address,
  }
