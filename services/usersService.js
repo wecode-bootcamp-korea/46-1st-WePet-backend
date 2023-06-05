@@ -1,16 +1,15 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
-import { createUserDao, getUserByEmail, deleteUser, updateUser } from '../models/usersDao.js'
+import { createUserDao, getUserByEmail, deleteUser, updateUser, getUserByIdDao } from '../models/usersDao.js'
 
-// 회원가입
 const signUp = async (email, password, name) => {
   const pwValidation = new RegExp(
     '^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,20})'
   )
   if (!pwValidation.test(password)) {
-    const err = new Error('PASSWORD_IS_NOT_VALID')
-    err.statusCode = 409
-    throw err
+    const error = new Error('PASSWORD_IS_NOT_VALID')
+    error.statusCode = 400
+    throw error
   }
   const saltRounds = 10
   const hashedPassword = await bcrypt.hash(password, saltRounds)
@@ -18,23 +17,23 @@ const signUp = async (email, password, name) => {
 
   return createUser
 }
-// 이메일 중복확인
+
 const checkDuplicateEmail = async (email) => {
   const user = await getUserByEmail(email);
   if (user) {
-    return true; // 중복된 이메일
+    return true;
   } else {
-    return false; // 중복되지 않은 이메일
+    return false;
   }
 };
-// 로그인
+
 const login = async (email, password) => {
   const user = await getUserByEmail(email)
   console.log(user)
   if (!user) {
-    const err = new Error('specified user does not exist')
-    err.statusCode = 404
-    throw err
+    const error = new Error('SPECIFIED USER DOES NOT EXIST')
+    error.statusCode = 400
+    throw error
   }
   const result = await bcrypt.compare(password, user.password)
   console.log(result)
@@ -44,35 +43,45 @@ const login = async (email, password) => {
     err.statusCode = 400
     throw err
   }
-
   return jwt.sign({ sub: user.id, email: user.email }, process.env.JWT_SECRET)
 }
 
 const getUserById = async (userId) => {
-  const user = await getUserById(userId)
+  const user = await getUserByIdDao(userId)
 
   if (!user) {
-    const err = new Error('User not found')
-    err.statusCode = 404
-    throw err
+    const error = new Error('USER NOT FOUND')
+    error.statusCode = 400
+    throw error;
   }
   return user
 }
-// 사용자 정보 삭제
+
 const deletedUser = async (userId) => {
   try {
     const result = await deleteUser(userId);
     return result;
   } catch (err) {
-    console.log(err);
-    throw err;
+    const error = new Error('INVALID_DATA_INPUT');
+    error.statusCode = 400;
+    throw error;
   }
 };
-//사용자 정보 업데이트
+
 const updatedUser = async (userId, updatedUserData) => {
   try {
     await updateUser(userId, updatedUserData);
   } catch (err) {
+    const error = new Error('INVALID_DATA_INPUT');
+    error.statusCode = 400;
+    throw error;
+  }
+};
+
+const updateAddress = async(userId, address) => {
+  try {
+    await updateAddress(userId, address)
+  } catch(err) {
     const error = new Error('INVALID_DATA_INPUT');
     error.statusCode = 400;
     throw error;
@@ -86,4 +95,5 @@ export {
   deletedUser,
   updatedUser,
   checkDuplicateEmail,
+  updateAddress,
 }

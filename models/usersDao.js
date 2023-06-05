@@ -1,5 +1,5 @@
 import { database } from './dataSource.js'
-// 유저 회원가입
+
 const createUserDao = async (email, password, name) => {
   try {
     await database.query(
@@ -18,7 +18,7 @@ const createUserDao = async (email, password, name) => {
     throw error
   }
 }
-// 로그인
+
 const getUserByEmail = async (email) => {
   try {
     const [user] = await database.query(
@@ -41,10 +41,10 @@ const getUserByEmail = async (email) => {
     throw error
   }
 }
-//access_token을 verify해서 얻어낸 userId를  auth.js -> userService -> userDao의 흐름으로 전달한다.
-const getUserById = async (userId) => {
+
+const getUserByIdDao = async (userId) => {
   try {
-    const user = await database.query(
+    const [ user ] = await database.query(
       `SELECT 
         u.email,
         u.password,
@@ -64,7 +64,6 @@ const getUserById = async (userId) => {
   }
 }
 
-// 유저 정보 삭제
 const deleteUser = async (userId) => {
   try {
     await database.query(
@@ -79,7 +78,6 @@ const deleteUser = async (userId) => {
   }
 };
 
-// 사용자 정보 수정
 const updateUser = async (userId, updatedUserData) => {
   try {
     await database.query(
@@ -96,34 +94,31 @@ const updateUser = async (userId, updatedUserData) => {
     throw error;
   }
 };
-//point
-// const point = async(userId, point) => {
-//   try {
-//     await database.
-//   }
-// }
 
-//address
-// const address = async(address1, address2) => {
-//   try {
-//     await database.query.userId(
-//       `INSERT INTO (
-//         address1,
-//         address2
-//       ) VALUES (?, ?)`,[address1, address2]
-//     )
-//   } catch(err) {
-//     console.log(err)
-//     const error = new Error('INVALID_DATA_INPUT!')
-//     error.statusCode = 400
-//     throw error
-//   }
-// }
+
+const address = async(userId, address1, address2) => {
+  try {
+    await database.query(
+      `UPDATE address
+        SET
+        address1 = ?,
+        address2 = ?
+        WHERE id = ?`,
+        [ address1, address2, userId]
+        )
+      } catch(err) {
+        console.log(err)
+        const error = new Error('INVALID_DATA_INPUT!')
+        error.statusCode = 400
+        throw error
+      }
+    }
 
 export {
   createUserDao,
   getUserByEmail,
-  getUserById,
+  getUserByIdDao,
   deleteUser,
-  updateUser
+  updateUser,
+  address
 }

@@ -1,12 +1,12 @@
 import verify from 'jsonwebtoken'
 import { usersService } from '../services'
 
-const loginRequired = async (req, res, next) => {		//비동기함수 실행
+const loginRequired = async (req, res, next) => {
 
 	// 1) Getting token and check of it's there
-  const accessToken = req.headers.authorization			//추출된토큰을 accessToken에 할당한다
+  const accessToken = req.headers.authorization
 
-	if (!accessToken) {									//토큰이 없다면 에러메세지 표시
+	if (!accessToken) {
 		const error = new Error('NEED_ACCESS_TOKEN')
 		error.statusCode = 401
 		
@@ -14,12 +14,12 @@ const loginRequired = async (req, res, next) => {		//비동기함수 실행
 	}
 
   // 2) Verification token
-  const decoded = await verify(accessToken, process.env.JWT_SECRET);	//토큰이 있다면 비동기적으로 실행 access토큰,env에있는씨크릿키를 할당한다
+  const decoded = await verify(accessToken, process.env.JWT_SECRET);
 
   // 3) Check if user still exists
-	const user = await usersService.getUserById(decoded.sub)			//user에 userService의 getUserById의 파라미터값을 할당한다
+	const user = await usersService.getUserById(decoded.sub)
 
-	if (!user) {														//user가 false면 에러코드 실행
+	if (!user) {
 		const error = new Error('USER_DOES_NOT_EXIST')
 		error.statusCode = 404
 		
@@ -27,6 +27,6 @@ const loginRequired = async (req, res, next) => {		//비동기함수 실행
 	}
 
   // 4) GRANT ACCESS
-  req.user = user;				//..?
-  next();						//다음을 실행하게 해주는 메소드
+  req.user = user;
+  next();
 }
