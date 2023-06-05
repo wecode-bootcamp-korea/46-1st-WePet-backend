@@ -6,7 +6,7 @@ const getProducts = catchAsync(async (req, res) => {
   res.status(200).json({ data: queryProductsData })
 })
 
-const getProduct = catchAsync(async (req, res) => {
+const getProductCategory = catchAsync(async (req, res) => {
   const productCategoryId = req.query.id
   const queryProductData = await productService.getProductByCategoryId(
     productCategoryId
@@ -17,7 +17,19 @@ const getProduct = catchAsync(async (req, res) => {
 const getProductById = catchAsync(async (req, res) => {
   const { productId } = req.params
   const [product] = await productService.getProductById(productId)
-  return res.status(200).json({ data: product })
+  res.status(200).json({ data: product })
 })
 
-export { getProducts, getProduct, getProductById }
+const getSortProducts = catchAsync(async (req, res) => {
+  console.log(req)
+  const { orderBy, offset, limit } = req.query
+
+  const queryProducts = await productService.getSortProducts(
+    orderBy,
+    offset,
+    limit
+  )
+  res.status(200).json({ data: queryProducts })
+})
+
+export { getProducts, getProductCategory, getProductById, getSortProducts }
