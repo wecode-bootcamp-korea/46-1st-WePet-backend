@@ -1,7 +1,6 @@
 import { database } from './dataSource.js'
-//유저 회원가입
+// 유저 회원가입
 const createUserDao = async (email, password, name) => {
-  console.log(email,password,name)
   try {
     await database.query(
       `INSERT INTO users (
@@ -19,7 +18,7 @@ const createUserDao = async (email, password, name) => {
     throw error
   }
 }
-//로그인
+// 로그인
 const getUserByEmail = async (email) => {
   try {
     const [user] = await database.query(
@@ -65,43 +64,66 @@ const getUserById = async (userId) => {
   }
 }
 
-//유저 정보 업데이트
-const updateUser = async (email, password, name) => {
+// 유저 정보 삭제
+const deleteUser = async (userId) => {
+  try {
+    await database.query(
+      `DELETE FROM users
+       WHERE id = ?`,
+      [userId]
+    );
+  } catch (err) {
+    const error = new Error('INVALID_DATA_INPUT');
+    error.statusCode = 400;
+    throw error;
+  }
+};
+
+// 사용자 정보 수정
+const updateUser = async (userId, updatedUserData) => {
   try {
     await database.query(
       `UPDATE users
-             SET email = ?,
-                 password = ?,
-                 name = ?
-             WHERE id = ?`,
-      [email, password, name, userId]
-    )
+       SET email = ?,
+           password = ?,
+           name = ?
+       WHERE id = ?`,
+      [updatedUserData.email, updatedUserData.password, updatedUserData.name, userId]
+    );
   } catch (err) {
-    const error = new Error('INVALID_DATA_INPUT')
-    error.statusCode = 400
-    throw error
+    const error = new Error('INVALID_DATA_INPUT');
+    error.statusCode = 400;
+    throw error;
   }
-}
+};
+//point
+// const point = async(userId, point) => {
+//   try {
+//     await database.
+//   }
+// }
 
-//유저 정보 삭제
-const deleteUser = async (email, password, name) => {
-  try {
-    await database.req.body(
-      `DELETE FROM users
-            WHERE email = ?
-            AND password = ?
-            AND name = ?`,
-      [email, password, name]
-    )
-  } catch (err) {
-    const error = new Error('INVALID_DATA_INPUT')
-    error.statusCode = 400
-    throw error
-  }
-}
+//address
+// const address = async(address1, address2) => {
+//   try {
+//     await database.query.userId(
+//       `INSERT INTO (
+//         address1,
+//         address2
+//       ) VALUES (?, ?)`,[address1, address2]
+//     )
+//   } catch(err) {
+//     console.log(err)
+//     const error = new Error('INVALID_DATA_INPUT!')
+//     error.statusCode = 400
+//     throw error
+//   }
+// }
 
 export {
   createUserDao,
   getUserByEmail,
   getUserById,
+  deleteUser,
+  updateUser
 }

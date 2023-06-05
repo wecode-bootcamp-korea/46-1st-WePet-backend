@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
+import { createUserDao, getUserByEmail, deleteUser, updateUser } from '../models/usersDao.js'
 
-import { createUserDao, getUserByEmail } from '../models/usersDao.js'
-
+// 회원가입
 const signUp = async (email, password, name) => {
   const pwValidation = new RegExp(
     '^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,20})'
@@ -18,7 +18,16 @@ const signUp = async (email, password, name) => {
 
   return createUser
 }
-
+// 이메일 중복확인
+const checkDuplicateEmail = async (email) => {
+  const user = await getUserByEmail(email);
+  if (user) {
+    return true; // 중복된 이메일
+  } else {
+    return false; // 중복되지 않은 이메일
+  }
+};
+// 로그인
 const login = async (email, password) => {
   const user = await getUserByEmail(email)
   console.log(user)
@@ -36,7 +45,7 @@ const login = async (email, password) => {
     throw err
   }
 
-  return jwt.sign({ sub: user.id, email: user.email }, process.env.JWT_SECRET) //토큰을 생성!!
+  return jwt.sign({ sub: user.id, email: user.email }, process.env.JWT_SECRET)
 }
 
 const getUserById = async (userId) => {
@@ -49,14 +58,32 @@ const getUserById = async (userId) => {
   }
   return user
 }
-// 사용자 정보 업데이트
-
-
-//유저 정보 삭제
-
+// 사용자 정보 삭제
+const deletedUser = async (userId) => {
+  try {
+    const result = await deleteUser(userId);
+    return result;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+//사용자 정보 업데이트
+const updatedUser = async (userId, updatedUserData) => {
+  try {
+    await updateUser(userId, updatedUserData);
+  } catch (err) {
+    const error = new Error('INVALID_DATA_INPUT');
+    error.statusCode = 400;
+    throw error;
+  }
+};
 
 export {
   signUp,
   login,
   getUserById,
+  deletedUser,
+  updatedUser,
+  checkDuplicateEmail,
 }

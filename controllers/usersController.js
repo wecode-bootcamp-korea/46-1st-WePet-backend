@@ -1,10 +1,14 @@
 import { usersService } from '../services/index.js'
-//회원가입
+import { checkDuplicateEmail } from '../services/usersService.js'
+// 회원가입
 const signUp = async (req, res) => {
   try {
     const { email, password, name } = req.body
+    const isDuplicateEmail = await checkDuplicateEmail(email);  
     if (!email || !password || !name) {
       return res.status(400).json({ messge: 'KEY_ERROR' })
+    } else if(isDuplicateEmail === true) {   //이메일 중복 확인
+      return res.status(400).json({messge: 'Duplicate email'})
     }
     const result = await usersService.signUp(email, password, name)
     return res.status(201).json({ messge: 'SIGNUP_SUCCESS', result })
@@ -13,7 +17,7 @@ const signUp = async (req, res) => {
     return res.status(err.statusCode || 500).json({ messge: err.messge })
   }
 }
-//로그인
+// 로그인
 const login = async (req, res) => {
   try {
     const { email, password } = req.body
@@ -28,38 +32,33 @@ const login = async (req, res) => {
   }
 }
 
-// 사용자 정보 업데이트
-const updateUser = async (req, res, next) => {
-  try {
-    const userId = req.params.id;
-    const { email, password, name } = req.body; // 업데이트할 사용자 정보
-
-    const updatedUserData = { email, password, name };  // 업데이트할 사용자 정보 객체 생성
-
-    const result = await usersService.updateUser(userId, updatedUserData);
-    res.status(200).json({ message: 'User updated successfully', result });
-  } catch (error) {
-    next(error);
-    console.log('!')
-  }
-};
-
 // 사용자 정보 삭제
 const deleteUser = async (req, res, next) => {
   try {
-    const userId = req.params.id;
-    const result = await usersService.deleteUser(userId);
+    const userId = req.query.userId;
+    const result = await usersService.deletedUser(userId);
     res.status(200).json({ message: 'User deleted successfully',result });
   } catch (error) {
     next(error);
-    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!')
+    console.log(error)
   }
 };
+// 사용자 정보 수정
+const updateUser = async (req, res) => {
+  const { userId } = req.params;
+  const updatedUserData = req.body;
 
+  try {
+    await updateUser(userId, updatedUserData);
+    res.sendStatus(200);
+  } catch (err) {
+    res.status(err.statusCode || 500).json({ error: err.message });
+  }
+};
 
 export {
   signUp,
   login,
   deleteUser,
-  updateUser
+  updateUser,
  }
