@@ -32,14 +32,14 @@ const deleteUser = catchAsync(async (req, res) => {
 const updateUser = catchAsync(async (req, res) => {
   const userId = req.user;
   const updatedUserData = req.body;
-    await updateUser(userId, updatedUserData);
+  await updateUser(userId, updatedUserData);
     res.status(201).json({message:'UPDATE SUCCESS', updatedUserData})
   })
 
 const address = catchAsync(async(req, res) => {
   const { userId } = req.params;
   const userAddress = req.body;
-    await updateUser(userId, userAddress);
+  await updateUser(userId, userAddress);
     res.sendStatus(200);
   })
 
