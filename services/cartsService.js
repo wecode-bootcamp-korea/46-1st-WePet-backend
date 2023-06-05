@@ -9,35 +9,19 @@ import {
 } from '../models/cartsDao.js'
 
 const getCartItems = async (userId) => {
-  const queryData = await queryCartItems(userId)
-  return queryData
+  return await queryCartItems(userId)
 }
 
 const postItemToCart = async (userId, productId, productQuantity) => {
-  const queryData = await queryInsertItemToCart(
-    userId,
-    productId,
-    productQuantity
-  )
-  return queryData
+  return queryInsertItemToCart(userId, productId, productQuantity)
 }
 
 const putItemQuantityInCart = async (userId, productId, productQuantity) => {
-  const queryData = await queryUpdateItemQuantityInCart(
-    userId,
-    productId,
-    productQuantity
-  )
-  return queryData
+  return queryUpdateItemQuantityInCart(userId, productId, productQuantity)
 }
 
 const addItemQuantityInCart = async (userId, productId, productQuantity) => {
-  const queryData = await queryAddItemQuantityInCart(
-    userId,
-    productId,
-    productQuantity
-  )
-  return queryData
+  return queryAddItemQuantityInCart(userId, productId, productQuantity)
 }
 
 const subtractItemQuantityInCart = async (
@@ -45,22 +29,15 @@ const subtractItemQuantityInCart = async (
   productId,
   productQuantity
 ) => {
-  const queryData = await querySubtractItemQuantityInCart(
-    userId,
-    productId,
-    productQuantity
-  )
-  return queryData
+  return querySubtractItemQuantityInCart(userId, productId, productQuantity)
 }
 
 const deleteItemInCart = async (userId, productId) => {
-  const queryData = await queryDeleteItemInCart(userId, productId)
-  return queryData
+  return queryDeleteItemInCart(userId, productId)
 }
 
 const deleteAllItemInCart = async (userId) => {
-  const queryData = await queryDeleteAllItemInCart(userId)
-  return queryData
+  return queryDeleteAllItemInCart(userId)
 }
 
 export {

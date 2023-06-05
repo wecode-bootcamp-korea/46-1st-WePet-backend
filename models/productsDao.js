@@ -75,20 +75,20 @@ const queryProductById = async (productId) => {
   }
 }
 
-const querySortProducts = async (orderBy, offset, limit) => {
+const querySortProducts = async (categoryId, orderBy, offset, limit) => {
   try {
     console.log(orderBy)
 
     const conditionArr = []
-    //let whereQuery = ''
+    let whereQuery = ''
     let sortQuery = ''
     let limitQuery = `LIMIT ${parseInt(limit)} OFFSET ${parseInt(offset)}`
 
-    // if (categoryId)
-    // conditionArr.push(`products.product_category_id IN (${categoryId})`)
+    if (categoryId)
+      conditionArr.push(`p.product_category_id IN (${categoryId})`)
 
-    //if (conditionArr.length > 0)
-    //whereQuery = `WHERE` + ` ` + conditionArr.join(' AND ')
+    if (conditionArr.length > 0)
+      whereQuery = `WHERE` + ` ` + conditionArr.join(' AND ')
 
     switch (orderBy) {
       case 'priceASC':
@@ -100,6 +100,9 @@ const querySortProducts = async (orderBy, offset, limit) => {
       case 'newest':
         sortQuery = `ORDER BY p.created_at DESC`
         break
+      case 'recommended':
+        sortQuery = `ORDER BY p.quantity ASC`
+        break
       default:
         sortQuery = `ORDER BY p.id`
         break
@@ -109,6 +112,7 @@ const querySortProducts = async (orderBy, offset, limit) => {
       `
       SELECT *
       FROM products AS p
+      ${whereQuery}
       ${sortQuery}
       ${limitQuery}
     `

@@ -207,7 +207,16 @@ const querySubtractItemQuantityInCart = async (
   productQuantity
 ) => {
   try {
-    if (productQuantity <= 1) {
+    const queryUpdatedQuantity = await database.query(
+      `SELECT quantity
+      FROM shopping_carts
+      WHERE product_id = ?      
+      `,
+      [productId]
+    )
+
+    const updatedQuantity = queryUpdatedQuantity[0].quantity
+    if (updatedQuantity === 1) {
       throw new Error('MINIMUM_QUANTITY_REACHED')
     }
 
@@ -240,6 +249,7 @@ const querySubtractItemQuantityInCart = async (
 
 const queryDeleteItemInCart = async (userId, productId) => {
   try {
+    console.log(userId, productId)
     const data = await database.query(
       `
         DELETE FROM 

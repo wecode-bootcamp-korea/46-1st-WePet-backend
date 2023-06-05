@@ -6,23 +6,19 @@ import {
 } from '../models/productsDao.js'
 
 const getAllProducts = async () => {
-  const queryData = await queryAllProducts()
-  return queryData
+  return queryAllProducts()
 }
 
 const getProductByCategoryId = async (productCategoryId) => {
-  const queryData = await queryProductByCategoryId(productCategoryId)
-  return queryData
+  return queryProductByCategoryId(productCategoryId)
 }
 
 const getProductById = async (productId) => {
-  const queryData = await queryProductById(productId)
-  return queryData
+  return queryProductById(productId)
 }
 
-const getSortProducts = async (orderBy, offset, limit) => {
-  const queryData = await querySortProducts(orderBy, offset, limit)
-  return queryData
+const getSortProducts = async (categoryId, orderBy, offset, limit) => {
+  return querySortProducts(categoryId, orderBy, offset, limit)
 }
 
 export {

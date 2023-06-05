@@ -3,7 +3,7 @@ import { catchAsync } from '../utils/errorHandler.js'
 
 const getProducts = catchAsync(async (req, res) => {
   const queryProductsData = await productService.getAllProducts()
-  res.status(200).json({ data: queryProductsData })
+  return res.status(200).json({ data: queryProductsData })
 })
 
 const getProductCategory = catchAsync(async (req, res) => {
@@ -11,25 +11,25 @@ const getProductCategory = catchAsync(async (req, res) => {
   const queryProductData = await productService.getProductByCategoryId(
     productCategoryId
   )
-  res.status(200).json({ data: queryProductData })
+  return res.status(200).json({ data: queryProductData })
 })
 
 const getProductById = catchAsync(async (req, res) => {
   const { productId } = req.params
   const [product] = await productService.getProductById(productId)
-  res.status(200).json({ data: product })
+  return res.status(200).json({ data: product })
 })
 
-const getSortProducts = catchAsync(async (req, res) => {
-  console.log(req)
-  const { orderBy, offset, limit } = req.query
+const getSortedProducts = catchAsync(async (req, res) => {
+  const { categoryId, orderBy, offset, limit } = req.query
 
   const queryProducts = await productService.getSortProducts(
+    categoryId,
     orderBy,
     offset,
     limit
   )
-  res.status(200).json({ data: queryProducts })
+  return res.status(200).json({ data: queryProducts })
 })
 
-export { getProducts, getProductCategory, getProductById, getSortProducts }
+export { getProducts, getProductCategory, getProductById, getSortedProducts }

@@ -1,4 +1,5 @@
 import { Router } from 'express'
+
 import { productsRouter } from './productsRouter.js'
 import { cartsRouter } from './cartsRouter.js'
 
@@ -16,6 +17,6 @@ o-''|\\_____/)
 })
 
 router.use('/products', productsRouter)
-router.use('/shopping-cart', cartsRouter)
+router.use('/shopping-carts', cartsRouter)
 
 export { router }

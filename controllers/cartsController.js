@@ -75,7 +75,7 @@ const subtractItemQuantityInCart = catchAsync(async (req, res) => {
     productQuantity
   )
 
-  return res.status(201).json({
+  return res.status(200).json({
     message: 'ITEM_QUANTITY_SUBTRACT_SUCCESSFUL',
   })
 })
@@ -83,6 +83,7 @@ const subtractItemQuantityInCart = catchAsync(async (req, res) => {
 const deleteItemInCart = catchAsync(async (req, res) => {
   const { userId } = req.body
   const { productId } = req.params
+  console.log(productId)
 
   if (!userId || !productId) {
     return res.status(400).json({
