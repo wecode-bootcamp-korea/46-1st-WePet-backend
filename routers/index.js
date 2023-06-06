@@ -18,5 +18,6 @@ o-''|\\_____/)
 
 router.use('/products', productsRouter)
 router.use('/shopping-carts', cartsRouter)
+router.use('/users', usersRouter)
 
 export { router }

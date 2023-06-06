@@ -1,6 +1,6 @@
 import { database } from './dataSource.js'
 
-const createUserDao = async (email, password, name) => {
+const createUser = async (email, password, name) => {
   try {
     const result = await database.query(
       `INSERT INTO users (
@@ -54,7 +54,7 @@ const getUserByEmail = async (email) => {
   }
 }
 
-const getUserByIdDao = async (userId) => {
+const getUserById = async (userId) => {
   try {
     const [user] = await database.query(
       `SELECT 
@@ -90,7 +90,7 @@ const deleteUser = async (userId) => {
   }
 }
 
-const update = async (userId, data) => {
+const updateUser = async (userId, data) => {
   try {
     return await database.query(
       `UPDATE users
@@ -107,9 +107,4 @@ const update = async (userId, data) => {
   }
 }
 
-export { createUserDao,
-  getUserByEmail,
-  getUserByIdDao,
-  deleteUser,
-  update,
-}
+export { createUser, getUserByEmail, getUserById, deleteUser, updateUser }
