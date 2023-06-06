@@ -13,7 +13,6 @@ const createAddress = async (userId, address1, address2) => {
       [userId, address1, address2]
     )
   } catch (err) {
-    console.log(err)
     const error = new Error('INVALID_DATA_INPUT!')
     error.statusCode = 400
     throw error

@@ -2,7 +2,7 @@ import { cartService } from '../services/index.js'
 import { catchAsync } from '../utils/errorHandler.js'
 
 const getCartItems = catchAsync(async (req, res) => {
-  const { userId } = req.query
+  const userId = req.user.id
 
   const queryCartItems = await cartService.getCartItems(userId)
   return res.status(200).json({
@@ -11,7 +11,7 @@ const getCartItems = catchAsync(async (req, res) => {
 })
 
 const postItemToCart = catchAsync(async (req, res) => {
-  const { userId } = req.query
+  const userId = req.user.id
   const { productId, productQuantity } = req.body
 
   if (!userId || !productId || !productQuantity) {
@@ -28,8 +28,7 @@ const postItemToCart = catchAsync(async (req, res) => {
 })
 
 const putItemQuantityInCart = catchAsync(async (req, res) => {
-  const { userId } = req.query
-
+  const userId = req.user.id
   const { productId, productQuantity } = req.body
 
   if (!userId || !productId || !productQuantity) {
@@ -46,8 +45,7 @@ const putItemQuantityInCart = catchAsync(async (req, res) => {
 })
 
 const addItemQuantityInCart = catchAsync(async (req, res) => {
-  const { userId } = req.query
-
+  const userId = req.user.id
   const { productId } = req.body
   const productQuantity = 1
 
@@ -65,8 +63,7 @@ const addItemQuantityInCart = catchAsync(async (req, res) => {
 })
 
 const subtractItemQuantityInCart = catchAsync(async (req, res) => {
-  const { userId } = req.query
-
+  const userId = req.user.id
   const { productId } = req.body
   const productQuantity = 1
 
@@ -88,10 +85,8 @@ const subtractItemQuantityInCart = catchAsync(async (req, res) => {
 })
 
 const deleteItemInCart = catchAsync(async (req, res) => {
-  const { userId } = req.query
-
+  const userId = req.user.id
   const { productId } = req.params
-  console.log(productId)
 
   if (!userId || !productId) {
     return res.status(400).json({
@@ -107,7 +102,7 @@ const deleteItemInCart = catchAsync(async (req, res) => {
 })
 
 const deleteAllItemInCart = catchAsync(async (req, res) => {
-  const { userId } = req.query
+  const userId = req.user.id
 
   if (!userId) {
     return res.status(400).json({
