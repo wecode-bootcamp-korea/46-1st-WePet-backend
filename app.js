@@ -12,9 +12,6 @@ const app = express()
 const PORT = process.env.PORT || 8000
 
 app.use(cors())
-app.use(morgan("dev"))
-
-app.use(cors())
 app.use(morgan('dev'))
 app.use(express.json())
 app.use(router)
@@ -26,7 +23,7 @@ database
     console.log('DATABASE_INITIALIZED 💽')
   })
   .catch((error) => {
-    console.error('DATABSE_INITIALIZATION_ERROR 👻')
+    console.error('DATABASE_INITIALIZATION_ERROR 👻')
   })
 
 const startServer = async () => {
@@ -35,4 +32,4 @@ const startServer = async () => {
   })
 }
 
-startServer();
+startServer()

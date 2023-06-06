@@ -1,4 +1,4 @@
-import * as productsService from './productsService.js'
-import * as usersService from './usersService.js'
+import * as productService from './productsService.js'
+import * as cartService from './cartsService.js'
 
-export { productsService, usersService }
+export { productService, cartService }

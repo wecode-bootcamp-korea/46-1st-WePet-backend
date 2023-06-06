@@ -6,31 +6,31 @@ const signUp = catchAsync(async (req, res) => {
   const { email, password, name } = req.body
   const isDuplicateEmail = await checkDuplicateEmail(email)
   if (!email || !password || !name) {
-    return res.status(400).json({ messge: 'KEY_ERROR' })
+    return res.status(400).json({ message: 'KEY_ERROR' })
   } else if (isDuplicateEmail === true) {
-    return res.status(400).json({ messge: 'DUPLICATE EMAIL' })
+    return res.status(400).json({ message: 'DUPLICATE EMAIL' })
   }
   const result = await usersService.signUp(email, password, name)
-  return res.status(201).json({ messge: 'SIGNUP_SUCCESS', result })
+  return res.status(201).json({ message: 'SIGNUP_SUCCESS', result })
 })
 
 const login = catchAsync(async (req, res) => {
   const { email, password } = req.body
   if (!email || !password) {
-    return res.status(400).json({ messge: 'KEY_ERROR' })
+    return res.status(400).json({ message: 'KEY_ERROR' })
   }
   const result = await usersService.login(email, password)
-  return res.status(201).json({ messge: 'LOGIN_SUCCESS', result })
+  return res.status(201).json({ message: 'LOGIN_SUCCESS', result })
 })
 
 const deleteUser = catchAsync(async (req, res) => {
   const { userId } = req.body
   const result = await usersService.deletedUser(userId)
-  console.log("!!!!!!!!",result,affectedRows)
+  console.log('!!!!!!!!', result, affectedRows)
   if (result.affectedRows > 0) {
-  res.status(200).json({ message: 'USER DELETED SUCCESS', result })
-} else {
-    res.status(401).json({ message: 'UNDEFINED USER',result })
+    res.status(200).json({ message: 'USER DELETED SUCCESS', result })
+  } else {
+    res.status(401).json({ message: 'UNDEFINED USER', result })
   }
 })
 
@@ -51,18 +51,10 @@ const postAddress = catchAsync(async (req, res) => {
   res.status(200).json({ message: 'CREATE SUCCESS', result })
 })
 
-//수정
 const point = catchAsync(async (req, res) => {
-  const { userId, userpoint } = req.body;
-  const result = await usersService.updatePayment(userId, userpoint)
-  res.status(200).json({ message: '!', result })
+  const { userId, userPoint } = req.body
+  const result = await usersService.updatePayment(userId, userPoint)
+  res.status(200).json({ message: result })
 })
 
-export {
-  signUp,
-  login,
-  deleteUser,
-  updateUser,
-  postAddress,
-  point
-}
+export { signUp, login, deleteUser, updateUser, postAddress, point }
