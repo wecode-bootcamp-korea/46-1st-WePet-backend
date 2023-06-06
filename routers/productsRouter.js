@@ -1,10 +1,11 @@
-import controllers from '../controllers/index.js'
 import { Router } from 'express'
+
+import { productController } from '../controllers/index.js'
 
 const productsRouter = Router()
 
-productsRouter.get('/', controllers.getProducts)
-productsRouter.get('/category', controllers.getProduct)
-productsRouter.get('/:productId', controllers.getProductById)
+productsRouter.get('/', productController.getProducts)
+productsRouter.get('/category', productController.getProduct)
+productsRouter.get('/:productId', productController.getProductById)
 
 export { productsRouter }

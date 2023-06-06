@@ -3,6 +3,7 @@ import {
   queryProductByCategoryId,
   queryProductById,
 } from '../models/productsDao.js'
+
 import { catchAsync } from '../utils/errorHandler.js'
 
 const getAllProducts = async () => {
