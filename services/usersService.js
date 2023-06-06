@@ -1,6 +1,8 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
-import { createUserDao, getUserByEmail, deleteUser, updateUser, getUserByIdDao } from '../models/usersDao.js'
+import * as userDao from '../models/usersDao.js'
+import * as addressDao from '../models/addressDao.js'
+// import * as usersPaymentDao from '../models/usersPaymentDao'
 
 const signUp = async (email, password, name) => {
   const pwValidation = new RegExp(
@@ -13,13 +15,13 @@ const signUp = async (email, password, name) => {
   }
   const saltRounds = 10
   const hashedPassword = await bcrypt.hash(password, saltRounds)
-  const createUser = await createUserDao(email, hashedPassword, name)
+  const createUser = await userDao.createUserDao(email, hashedPassword, name)
 
   return createUser
 }
 
 const checkDuplicateEmail = async (email) => {
-  const user = await getUserByEmail(email);
+  const user = await userDao.getUserByEmail(email);
   if (user) {
     return true;
   } else {
@@ -28,15 +30,13 @@ const checkDuplicateEmail = async (email) => {
 };
 
 const login = async (email, password) => {
-  const user = await getUserByEmail(email)
-  console.log(user)
+  const user = await userDao.getUserByEmail(email)
   if (!user) {
     const error = new Error('SPECIFIED USER DOES NOT EXIST')
     error.statusCode = 400
     throw error
   }
   const result = await bcrypt.compare(password, user.password)
-  console.log(result)
 
   if (!result) {
     const err = new Error('invalid password')
@@ -47,7 +47,7 @@ const login = async (email, password) => {
 }
 
 const getUserById = async (userId) => {
-  const user = await getUserByIdDao(userId)
+  const user = await userDao.getUserByIdDao(userId)
 
   if (!user) {
     const error = new Error('USER NOT FOUND')
@@ -56,31 +56,33 @@ const getUserById = async (userId) => {
   }
   return user
 }
-
+//수정
 const deletedUser = async (userId) => {
   try {
-    const result = await deleteUser(userId);
+    const result = await userDao.deleteUser(userId);
     return result;
   } catch (err) {
-    const error = new Error('INVALID_DATA_INPUT');
-    error.statusCode = 400;
+    const error = new Error('INVALID_DATA_INPUT!');
+    console.log(err)
+    error.statusCode = 404;
     throw error;
   }
 };
 
-const updatedUser = async (userId, updatedUserData) => {
+const updateUser = async (userId, data) => {
   try {
-    await updateUser(userId, updatedUserData);
+    return await userDao.update(userId, data);
   } catch (err) {
     const error = new Error('INVALID_DATA_INPUT');
     error.statusCode = 400;
+    console.log(err)
     throw error;
   }
 };
 
-const updateAddress = async(userId, address) => {
+const createNewAddress = async(userId, address1, address2) => {
   try {
-    await updateAddress(userId, address)
+    await addressDao.createAddress(userId, address1, address2)
   } catch(err) {
     const error = new Error('INVALID_DATA_INPUT');
     error.statusCode = 400;
@@ -88,12 +90,23 @@ const updateAddress = async(userId, address) => {
   }
 };
 
+const updatePayment = async() => {
+  try {
+    await usersPaymentDao.payment(points, userId)
+  } catch(err) {
+    const error = new Error('INVALID_DATA_INPUT');
+    error.statusCode = 400;
+    throw error;
+  }
+}
+
 export {
   signUp,
   login,
   getUserById,
   deletedUser,
-  updatedUser,
+  updateUser,
   checkDuplicateEmail,
-  updateAddress,
+  createNewAddress,
+  updatePayment
 }

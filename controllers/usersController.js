@@ -3,51 +3,66 @@ import { checkDuplicateEmail } from '../services/usersService.js'
 import { catchAsync } from '../utils/errorHandler.js'
 
 const signUp = catchAsync(async (req, res) => {
-    const { email, password, name } = req.body
-    const isDuplicateEmail = await checkDuplicateEmail(email);  
-    if (!email || !password || !name) {
-      return res.status(400).json({ messge: 'KEY_ERROR' })
-    } else if(isDuplicateEmail === true) {   //이메일 중복 확인
-      return res.status(400).json({messge: 'DUPLICATE EMAIL'})
-    }
-    const result = await usersService.signUp(email, password, name)
-    return res.status(201).json({ messge: 'SIGNUP_SUCCESS', result })
-  })
+  const { email, password, name } = req.body
+  const isDuplicateEmail = await checkDuplicateEmail(email)
+  if (!email || !password || !name) {
+    return res.status(400).json({ messge: 'KEY_ERROR' })
+  } else if (isDuplicateEmail === true) {
+    return res.status(400).json({ messge: 'DUPLICATE EMAIL' })
+  }
+  const result = await usersService.signUp(email, password, name)
+  return res.status(201).json({ messge: 'SIGNUP_SUCCESS', result })
+})
 
 const login = catchAsync(async (req, res) => {
-    const { email, password } = req.body
-    if (!email || !password) {
-      return res.status(400).json({ messge: 'KEY_ERROR' })
-    }
-    const result = await usersService.login(email, password)
-    return res.status(201).json({ messge: 'LOGIN_SUCCESS', result })
-  })
+  const { email, password } = req.body
+  if (!email || !password) {
+    return res.status(400).json({ messge: 'KEY_ERROR' })
+  }
+  const result = await usersService.login(email, password)
+  return res.status(201).json({ messge: 'LOGIN_SUCCESS', result })
+})
 
 const deleteUser = catchAsync(async (req, res) => {
-    const userId = req.user;
-    const result = await usersService.deletedUser(userId);
-    res.status(200).json({ message: 'USER DELETED SUCCESS',result });
-  })
+  const { userId } = req.body
+  const result = await usersService.deletedUser(userId)
+  console.log("!!!!!!!!",result,affectedRows)
+  if (result.affectedRows > 0) {
+  res.status(200).json({ message: 'USER DELETED SUCCESS', result })
+} else {
+    res.status(401).json({ message: 'UNDEFINED USER',result })
+  }
+})
 
 const updateUser = catchAsync(async (req, res) => {
-  const userId = req.user;
-  const updatedUserData = req.body;
-  await updateUser(userId, updatedUserData);
-    res.status(201).json({message:'UPDATE SUCCESS', updatedUserData})
-  })
+  const { userId } = req.params
+  const data = req.body
+  const result = await usersService.updateUser(userId, data)
+  if (result.affectedRows > 0) {
+    res.status(200).json({ message: 'USER UPDATE SUCCESS', result })
+  } else {
+    res.status(400).json({ message: 'undefined user' })
+  }
+})
 
-const address = catchAsync(async(req, res) => {
-  const { userId } = req.params;
-  const userAddress = req.body;
-  await updateUser(userId, userAddress);
-    res.sendStatus(200);
-  })
+const postAddress = catchAsync(async (req, res) => {
+  const { userId, address1, address2 } = req.body
+  const result = await usersService.createNewAddress(userId, address1, address2)
+  res.status(200).json({ message: 'CREATE SUCCESS', result })
+})
+
+//수정
+const point = catchAsync(async (req, res) => {
+  const { userId, userpoint } = req.body;
+  const result = await usersService.updatePayment(userId, userpoint)
+  res.status(200).json({ message: '!', result })
+})
 
 export {
   signUp,
   login,
   deleteUser,
   updateUser,
-  address,
-
- }
+  postAddress,
+  point
+}

@@ -2,7 +2,7 @@ import { database } from './dataSource.js'
 
 const createUserDao = async (email, password, name) => {
   try {
-    await database.query(
+    const result = await database.query(
       `INSERT INTO users (
             email,
             password,
@@ -11,6 +11,18 @@ const createUserDao = async (email, password, name) => {
           ?, ?, ?)`,
       [email, password, name]
     )
+    if (result.affectedRows > 0) {
+      await database.query(
+        `INSERT INTO users_payment (
+          user_id,
+          points
+        ) VALUES (?, 500000)`,
+        [result.insertId]
+      )
+    } else {
+      const error = new Error('CREATE_NOT_USER')
+      error.statusCode = 401
+    }
   } catch (err) {
     console.log(err)
     const error = new Error('INVALID_DATA_INPUT!')
@@ -31,7 +43,7 @@ const getUserByEmail = async (email) => {
         FROM users u
         WHERE u.email = ?
         `,
-        [email]
+      [email]
     )
     return user
   } catch (err) {
@@ -44,7 +56,7 @@ const getUserByEmail = async (email) => {
 
 const getUserByIdDao = async (userId) => {
   try {
-    const [ user ] = await database.query(
+    const [user] = await database.query(
       `SELECT 
         u.email,
         u.password,
@@ -66,59 +78,38 @@ const getUserByIdDao = async (userId) => {
 
 const deleteUser = async (userId) => {
   try {
-    await database.query(
+    return await database.query(
       `DELETE FROM users
        WHERE id = ?`,
       [userId]
-    );
+    )
   } catch (err) {
-    const error = new Error('INVALID_DATA_INPUT');
-    error.statusCode = 400;
-    throw error;
+    const error = new Error('INVALID_DATA_INPUT')
+    error.statusCode = 400
+    throw error
   }
-};
+}
 
-const updateUser = async (userId, updatedUserData) => {
+const update = async (userId, data) => {
   try {
-    await database.query(
+    return await database.query(
       `UPDATE users
        SET email = ?,
            password = ?,
            name = ?
        WHERE id = ?`,
-      [updatedUserData.email, updatedUserData.password, updatedUserData.name, userId]
-    );
+      [data.email, data.password, data.name, userId]
+    )
   } catch (err) {
-    const error = new Error('INVALID_DATA_INPUT');
-    error.statusCode = 400;
-    throw error;
+    const error = new Error('INVALID_DATA_INPUT')
+    error.statusCode = 400
+    throw error
   }
-};
+}
 
-
-const address = async(userId, address1, address2) => {
-  try {
-    await database.query(
-      `UPDATE address
-        SET
-        address1 = ?,
-        address2 = ?
-        WHERE id = ?`,
-        [ address1, address2, userId]
-        )
-      } catch(err) {
-        console.log(err)
-        const error = new Error('INVALID_DATA_INPUT!')
-        error.statusCode = 400
-        throw error
-      }
-    }
-
-export {
-  createUserDao,
+export { createUserDao,
   getUserByEmail,
   getUserByIdDao,
   deleteUser,
-  updateUser,
-  address
+  update,
 }
