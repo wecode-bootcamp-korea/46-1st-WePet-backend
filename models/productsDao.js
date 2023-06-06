@@ -52,18 +52,24 @@ const queryProductByCategoryId = async (queryId) => {
 const queryProductById = async (productId) => {
   try {
     const data = await database.query(
-      `SELECT
+      `
+      SELECT
         p.id AS productId,
         p.product_name AS productName,
         p.product_price AS productPrice,
         p.product_description AS productDescription,
         p.product_category_id AS productCategoryId,
         p.quantity AS productQuantity,
-        p.main_image_thumbnail AS mainThumbnailImage
-       FROM 
+        p.main_image_thumbnail AS mainThumbnailImage,
+        JSON_ARRAYAGG(e.extra_product_image) AS extraImages
+      FROM
         products AS p
-       WHERE 
+      LEFT JOIN
+        extra_product_images AS e ON p.id = e.product_id
+      WHERE
         p.id = ?
+      GROUP BY
+        p.id
     `,
       [productId]
     )
@@ -75,10 +81,13 @@ const queryProductById = async (productId) => {
   }
 }
 
-const querySortProducts = async (categoryId, orderBy, offset, limit) => {
+const querySortProducts = async (
+  categoryId,
+  orderBy,
+  offset = 0,
+  limit = 10
+) => {
   try {
-    console.log(orderBy)
-
     const conditionArr = []
     let whereQuery = ''
     let sortQuery = ''
@@ -110,7 +119,11 @@ const querySortProducts = async (categoryId, orderBy, offset, limit) => {
 
     const data = await database.query(
       `
-      SELECT *
+      SELECT
+        p.id AS productId,
+        p.product_name AS productName,
+        p.product_price AS productPrice,
+        p.main_image_thumbnail AS productImage
       FROM products AS p
       ${whereQuery}
       ${sortQuery}
@@ -125,9 +138,46 @@ const querySortProducts = async (categoryId, orderBy, offset, limit) => {
   }
 }
 
+const queryInsertProduct = async (
+  productName,
+  productCategoryId,
+  productPrice,
+  productQuantity,
+  productDescription,
+  mainImageUrl
+) => {
+  try {
+    const data = await database.query(
+      `INSERT INTO products
+      (
+         product_name,
+         product_price,
+         product_description,
+         product_category_id,
+         quantity,
+         main_image_thumbnail
+      ) VALUES (?, ?, ?, ?, ?, ?)`,
+      [
+        productName,
+        productPrice,
+        productDescription,
+        productCategoryId,
+        productQuantity,
+        mainImageUrl,
+      ]
+    )
+    return data
+  } catch {
+    const error = new Error('DATABASE_QUERY_ERROR')
+    error.statusCode = 400
+    throw error
+  }
+}
+
 export {
   queryAllProducts,
   queryProductByCategoryId,
   queryProductById,
   querySortProducts,
+  queryInsertProduct,
 }

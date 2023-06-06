@@ -2,7 +2,7 @@ import { cartService } from '../services/index.js'
 import { catchAsync } from '../utils/errorHandler.js'
 
 const getCartItems = catchAsync(async (req, res) => {
-  const { userId } = req.body
+  const { userId } = req.query
 
   const queryCartItems = await cartService.getCartItems(userId)
   return res.status(200).json({
@@ -11,7 +11,8 @@ const getCartItems = catchAsync(async (req, res) => {
 })
 
 const postItemToCart = catchAsync(async (req, res) => {
-  const { userId, productId, productQuantity } = req.body
+  const { userId } = req.query
+  const { productId, productQuantity } = req.body
 
   if (!userId || !productId || !productQuantity) {
     return res.status(400).json({
@@ -27,7 +28,9 @@ const postItemToCart = catchAsync(async (req, res) => {
 })
 
 const putItemQuantityInCart = catchAsync(async (req, res) => {
-  const { userId, productId, productQuantity } = req.body
+  const { userId } = req.query
+
+  const { productId, productQuantity } = req.body
 
   if (!userId || !productId || !productQuantity) {
     return res.status(400).json({
@@ -43,7 +46,9 @@ const putItemQuantityInCart = catchAsync(async (req, res) => {
 })
 
 const addItemQuantityInCart = catchAsync(async (req, res) => {
-  const { userId, productId } = req.body
+  const { userId } = req.query
+
+  const { productId } = req.body
   const productQuantity = 1
 
   if (!userId || !productId || !productQuantity) {
@@ -60,7 +65,9 @@ const addItemQuantityInCart = catchAsync(async (req, res) => {
 })
 
 const subtractItemQuantityInCart = catchAsync(async (req, res) => {
-  const { userId, productId } = req.body
+  const { userId } = req.query
+
+  const { productId } = req.body
   const productQuantity = 1
 
   if (!userId || !productId || !productQuantity) {
@@ -81,7 +88,8 @@ const subtractItemQuantityInCart = catchAsync(async (req, res) => {
 })
 
 const deleteItemInCart = catchAsync(async (req, res) => {
-  const { userId } = req.body
+  const { userId } = req.query
+
   const { productId } = req.params
   console.log(productId)
 
@@ -93,13 +101,13 @@ const deleteItemInCart = catchAsync(async (req, res) => {
 
   await cartService.deleteItemInCart(userId, productId)
 
-  return res.status(200).json({
+  return res.status(204).json({
     message: 'ITEM_REMOVED_SUCCESSFUL',
   })
 })
 
 const deleteAllItemInCart = catchAsync(async (req, res) => {
-  const { userId } = req.body
+  const { userId } = req.query
 
   if (!userId) {
     return res.status(400).json({
@@ -109,7 +117,7 @@ const deleteAllItemInCart = catchAsync(async (req, res) => {
 
   await cartService.deleteAllItemInCart(userId)
 
-  return res.status(201).json({
+  return res.status(204).json({
     message: 'REMOVE_ALL_ITEM_SUCCESSFUL',
   })
 })

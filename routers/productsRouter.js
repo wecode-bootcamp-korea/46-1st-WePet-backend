@@ -8,5 +8,6 @@ productsRouter.get('/', productController.getProducts)
 productsRouter.get('/category', productController.getProductCategory)
 productsRouter.get('/details/:productId', productController.getProductById)
 productsRouter.get('/filter', productController.getSortedProducts)
+productsRouter.post('/', productController.postProductToDb)
 
 export { productsRouter }

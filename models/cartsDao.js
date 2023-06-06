@@ -1,5 +1,5 @@
 import { database } from './dataSource.js'
-
+// return product id and image as well
 const queryCartItems = async (userId) => {
   try {
     const data = await database.query(
@@ -9,9 +9,11 @@ const queryCartItems = async (userId) => {
         users.name AS userName,
         JSON_ARRAYAGG (
             JSON_OBJECT (
+                'productId', products.id,
                 'productName', products.product_name,
                 'productPrice', products.product_price,
-                'productQuantity', shopping_carts.quantity
+                'productQuantity', shopping_carts.quantity,
+                'productImage', products.main_image_thumbnail
             )
         ) AS items
         FROM

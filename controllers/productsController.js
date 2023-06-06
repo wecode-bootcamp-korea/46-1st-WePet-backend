@@ -32,4 +32,33 @@ const getSortedProducts = catchAsync(async (req, res) => {
   return res.status(200).json({ data: queryProducts })
 })
 
-export { getProducts, getProductCategory, getProductById, getSortedProducts }
+const postProductToDb = catchAsync(async (req, res) => {
+  const {
+    productName,
+    productCategoryId,
+    productPrice,
+    productQuantity,
+    productDescription,
+    mainImageUrl,
+  } = req.body
+
+  await productService.postProduct(
+    productName,
+    productCategoryId,
+    productPrice,
+    productQuantity,
+    productDescription,
+    mainImageUrl
+  )
+  return res.status(200).json({
+    message: 'PRODUCT_POSTED_TO_DB_SUCESSFULLY',
+  })
+})
+
+export {
+  getProducts,
+  getProductCategory,
+  getProductById,
+  getSortedProducts,
+  postProductToDb,
+}

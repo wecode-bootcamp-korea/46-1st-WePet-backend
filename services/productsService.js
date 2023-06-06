@@ -3,6 +3,7 @@ import {
   queryProductByCategoryId,
   queryProductById,
   querySortProducts,
+  queryInsertProduct,
 } from '../models/productsDao.js'
 
 const getAllProducts = async () => {
@@ -21,9 +22,28 @@ const getSortProducts = async (categoryId, orderBy, offset, limit) => {
   return querySortProducts(categoryId, orderBy, offset, limit)
 }
 
+const postProduct = async (
+  productName,
+  productCategoryId,
+  productPrice,
+  productQuantity,
+  productDescription,
+  mainImageUrl
+) => {
+  return queryInsertProduct(
+    productName,
+    productCategoryId,
+    productPrice,
+    productQuantity,
+    productDescription,
+    mainImageUrl
+  )
+}
+
 export {
   getAllProducts,
   getProductByCategoryId,
   getProductById,
   getSortProducts,
+  postProduct,
 }
