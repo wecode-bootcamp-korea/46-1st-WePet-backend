@@ -23,7 +23,7 @@ database
     console.log('DATABASE_INITIALIZED 💽')
   })
   .catch((error) => {
-    console.error('DATABSE_INITIALIZATION_ERROR 👻')
+    console.error('DATABASE_INITIALIZATION_ERROR 👻')
   })
 
 const startServer = async () => {
