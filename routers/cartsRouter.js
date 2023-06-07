@@ -29,4 +29,6 @@ cartsRouter.delete(
   cartController.deleteAllItemInCart
 )
 
+cartsRouter.get('/create-order', loginRequired, cartController.createUserOrder)
+
 export { cartsRouter }

@@ -285,6 +285,57 @@ const queryDeleteAllItemInCart = async (userId) => {
   }
 }
 
+const queryUserOrder = async (userId) => {
+  try {
+    const createOrder = await database.query(
+      `
+      INSERT INTO
+        orders(user_id)
+      VALUES(?)
+       `,
+      [userId]
+    )
+
+    const getOrder = await database.query(
+      `SELECT
+        o.id,
+        sc.user_id,
+        sc.product_id,
+        sc.quantity,
+        p.product_price 
+      FROM shopping_carts AS sc
+      JOIN orders AS o ON sc.user_id = o.user_id
+      JOIN products AS p ON sc.product_id = p.id
+      WHERE
+        o.user_id = ?        
+        `,
+      [userId]
+    )
+
+    for (const order of getOrder) {
+      const createOrderItems = await database.query(
+        `
+        INSERT INTO order_items (orders_id, product_id, order_item_price, order_item_quantity)
+        VALUES (?, ?, ?, ?)
+        `,
+        [order.id, order.product_id, order.product_price, order.quantity]
+      )
+    }
+
+    const clearUserShoppingCartData = await database.query(
+      `
+      DELETE FROM shopping_carts WHERE user_id = ?
+      `,
+      [userId]
+    )
+  } catch (error) {
+    console.log(error)
+    const err = new Error('DATABASE_QUERY_ERROR')
+    err.statusCode = 400
+    throw err
+  }
+}
+
 export {
   queryCartItems,
   queryInsertItemToCart,
@@ -293,4 +344,5 @@ export {
   querySubtractItemQuantityInCart,
   queryDeleteItemInCart,
   queryDeleteAllItemInCart,
+  queryUserOrder,
 }

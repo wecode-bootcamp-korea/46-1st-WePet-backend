@@ -6,10 +6,11 @@ import {
   querySubtractItemQuantityInCart,
   queryDeleteItemInCart,
   queryDeleteAllItemInCart,
+  queryUserOrder,
 } from '../models/cartsDao.js'
 
 const getCartItems = async (userId) => {
-  return await queryCartItems(userId)
+  return queryCartItems(userId)
 }
 
 const postItemToCart = async (userId, productId) => {
@@ -40,6 +41,10 @@ const deleteAllItemInCart = async (userId) => {
   return queryDeleteAllItemInCart(userId)
 }
 
+const createUserOrder = async (userId) => {
+  return queryUserOrder(userId)
+}
+
 export {
   getCartItems,
   postItemToCart,
@@ -48,4 +53,5 @@ export {
   subtractItemQuantityInCart,
   deleteItemInCart,
   deleteAllItemInCart,
+  createUserOrder,
 }
