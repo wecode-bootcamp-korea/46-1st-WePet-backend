@@ -12,8 +12,8 @@ const getCartItems = async (userId) => {
   return await queryCartItems(userId)
 }
 
-const postItemToCart = async (userId, productId, productQuantity) => {
-  return queryInsertItemToCart(userId, productId, productQuantity)
+const postItemToCart = async (userId, productId) => {
+  return queryInsertItemToCart(userId, productId)
 }
 
 const putItemQuantityInCart = async (userId, productId, productQuantity) => {

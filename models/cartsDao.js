@@ -1,5 +1,4 @@
 import { database } from './dataSource.js'
-// return product id and image as well
 const queryCartItems = async (userId) => {
   try {
     const data = await database.query(
@@ -38,7 +37,7 @@ const queryCartItems = async (userId) => {
   }
 }
 
-const queryInsertItemToCart = async (userId, productId, productQuantity) => {
+const queryInsertItemToCart = async (userId, productId) => {
   try {
     const productQuantityData = await database.query(
       `
@@ -62,10 +61,7 @@ const queryInsertItemToCart = async (userId, productId, productQuantity) => {
 
     const shoppingCartQuantity = shoppingCartQuantityData[0].totalQuantity
 
-    if (
-      parseInt(shoppingCartQuantity) + parseInt(productQuantity) >
-      availableQuantity
-    ) {
+    if (parseInt(shoppingCartQuantity) + 1 > availableQuantity) {
       throw new Error('CART_QUANTITY_EXCEEDS_AVAILABLE_QUANTITY')
     }
 
@@ -81,9 +77,9 @@ const queryInsertItemToCart = async (userId, productId, productQuantity) => {
             )
         VALUES (?, ?, 1)
         ON DUPLICATE KEY UPDATE
-          quantity = quantity + ?
+          quantity = quantity + 1
         `,
-        [userId, productId, productQuantity]
+        [userId, productId]
       )
       return data
     } catch (dataError) {

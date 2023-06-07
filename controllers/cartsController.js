@@ -12,15 +12,15 @@ const getCartItems = catchAsync(async (req, res) => {
 
 const postItemToCart = catchAsync(async (req, res) => {
   const userId = req.user.id
-  const { productId, productQuantity } = req.body
+  const { productId } = req.body
 
-  if (!userId || !productId || !productQuantity) {
+  if (!userId || !productId) {
     return res.status(400).json({
       message: 'MISSING_USER_ID_PRODUCT_ID_AND_QUANTITY',
     })
   }
 
-  await cartService.postItemToCart(userId, productId, productQuantity)
+  await cartService.postItemToCart(userId, productId)
 
   return res.status(201).json({
     message: 'ITEM_ADD_TO_CART_SUCCESSFUL',
