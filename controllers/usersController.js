@@ -25,7 +25,6 @@ const login = catchAsync(async (req, res) => {
   }
 
   const result = await userService.login(email, password)
-
   return res.status(201).json({ message: 'LOGIN_SUCCESS', result })
 })
 

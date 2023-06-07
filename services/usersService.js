@@ -29,31 +29,33 @@ const checkDuplicateEmail = async (email) => {
   }
 }
 
-const login = async (email, password) => {
+const login = async (email, plaintextPassword) => {
   const user = await userDao.getUserByEmail(email)
 
   if (!user) {
-    const error = new Error('SPECIFIED USER DOES NOT EXIST')
+    const error = new Error('SPECIFIED_USER_DOES_NOT_EXIST')
     error.statusCode = 400
     throw error
   }
 
-  const result = await bcrypt.compare(password, user.password)
+  const result = await bcrypt.compare(plaintextPassword, user.password)
 
   if (!result) {
-    const err = new Error('invalid password')
+    const err = new Error('INVALID_PASSWORD')
     err.statusCode = 400
     throw err
   }
 
-  return jwt.sign({ sub: user.id, email: user.email }, process.env.JWT_SECRET)
+  return jwt.sign({ id: user.id }, process.env.SECRET_JWT_KEY, {
+    algorithm: process.env.ALGORITHM,
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  })
 }
 
 const getUserById = async (userId) => {
   const user = await userDao.getUserById(userId)
-
   if (!user) {
-    const error = new Error('USER NOT FOUND')
+    const error = new Error('USER_NOT_FOUND')
     error.statusCode = 400
     throw error
   }
@@ -67,7 +69,6 @@ const deletedUser = async (userId) => {
     return result
   } catch (err) {
     const error = new Error('INVALID_DATA_INPUT!')
-    console.log(err)
     error.statusCode = 404
     throw error
   }
@@ -79,7 +80,6 @@ const updateUser = async (userId, data) => {
   } catch (err) {
     const error = new Error('INVALID_DATA_INPUT')
     error.statusCode = 400
-    console.log(err)
     throw error
   }
 }

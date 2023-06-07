@@ -251,7 +251,6 @@ const querySubtractItemQuantityInCart = async (
 
 const queryDeleteItemInCart = async (userId, productId) => {
   try {
-    console.log(userId, productId)
     const data = await database.query(
       `
         DELETE FROM 

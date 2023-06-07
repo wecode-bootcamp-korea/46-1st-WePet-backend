@@ -24,7 +24,6 @@ const createUser = async (email, password, name) => {
       error.statusCode = 401
     }
   } catch (err) {
-    console.log(err)
     const error = new Error('INVALID_DATA_INPUT!')
     error.statusCode = 400
     throw error
@@ -47,7 +46,6 @@ const getUserByEmail = async (email) => {
     )
     return user
   } catch (err) {
-    console.log(err)
     const error = new Error('INVALID_DATA_INPUT')
     error.statusCode = 400
     throw error
@@ -57,7 +55,8 @@ const getUserByEmail = async (email) => {
 const getUserById = async (userId) => {
   try {
     const [user] = await database.query(
-      `SELECT 
+      `SELECT
+        u.id, 
         u.email,
         u.password,
         u.name,
@@ -69,7 +68,6 @@ const getUserById = async (userId) => {
     )
     return user
   } catch (err) {
-    console.log(err)
     const error = new Error('INVALID_DATA_INPUT')
     error.statusCode = 400
     throw error
