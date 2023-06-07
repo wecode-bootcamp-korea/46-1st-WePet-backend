@@ -117,14 +117,6 @@ const deleteAllItemInCart = catchAsync(async (req, res) => {
   })
 })
 
-const createUserOrder = catchAsync(async (req, res) => {
-  const userId = req.user.id
-  await cartService.createUserOrder(userId)
-  return res.status(201).json({
-    message: 'CREATE_ORDER_SUCCESSFUL',
-  })
-})
-
 export {
   getCartItems,
   postItemToCart,
@@ -133,5 +125,4 @@ export {
   subtractItemQuantityInCart,
   deleteItemInCart,
   deleteAllItemInCart,
-  createUserOrder,
 }

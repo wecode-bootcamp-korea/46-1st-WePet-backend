@@ -6,7 +6,6 @@ import {
   querySubtractItemQuantityInCart,
   queryDeleteItemInCart,
   queryDeleteAllItemInCart,
-  queryUserOrder,
 } from '../models/cartsDao.js'
 
 const getCartItems = async (userId) => {
