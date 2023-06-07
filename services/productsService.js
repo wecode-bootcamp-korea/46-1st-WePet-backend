@@ -2,23 +2,48 @@ import {
   queryAllProducts,
   queryProductByCategoryId,
   queryProductById,
+  querySortProducts,
+  queryInsertProduct,
 } from '../models/productsDao.js'
 
-import { catchAsync } from '../utils/errorHandler.js'
-
 const getAllProducts = async () => {
-  const queryData = await queryAllProducts()
-  return queryData
+  return queryAllProducts()
 }
 
 const getProductByCategoryId = async (productCategoryId) => {
-  const queryData = await queryProductByCategoryId(productCategoryId)
-  return queryData
+  return queryProductByCategoryId(productCategoryId)
 }
 
 const getProductById = async (productId) => {
-  const queryData = await queryProductById(productId)
-  return queryData
+  return queryProductById(productId)
 }
 
-export { getAllProducts, getProductByCategoryId, getProductById }
+const getSortProducts = async (categoryId, orderBy, offset, limit) => {
+  return querySortProducts(categoryId, orderBy, offset, limit)
+}
+
+const postProduct = async (
+  productName,
+  productCategoryId,
+  productPrice,
+  productQuantity,
+  productDescription,
+  mainImageUrl
+) => {
+  return queryInsertProduct(
+    productName,
+    productCategoryId,
+    productPrice,
+    productQuantity,
+    productDescription,
+    mainImageUrl
+  )
+}
+
+export {
+  getAllProducts,
+  getProductByCategoryId,
+  getProductById,
+  getSortProducts,
+  postProduct,
+}

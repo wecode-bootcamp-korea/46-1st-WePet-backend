@@ -42,7 +42,7 @@ const updateUser = catchAsync(async (req, res) => {
   return res.status(201).json({message:'Update Success', updatedUserData})
   })
 
-const address = catchAsync(async(req, res) => {
+const updateAddress = catchAsync(async(req, res) => {
   const userId = req.user.id;
   const { address1, address2 } = req.body;
   await usersService.updateUserAddress(userId, address1, address2);
@@ -54,5 +54,5 @@ export {
   login,
   deleteUser,
   updateUser,
-  address,
+  updateAddress,
  }
