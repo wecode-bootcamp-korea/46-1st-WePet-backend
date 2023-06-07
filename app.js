@@ -12,9 +12,6 @@ const app = express()
 const PORT = process.env.PORT || 8000
 
 app.use(cors())
-app.use(morgan("dev"))
-
-app.use(cors())
 app.use(morgan('dev'))
 app.use(express.json())
 app.use(router)
@@ -29,10 +26,6 @@ database
     console.error('DATABSE_INITIALIZATION_ERROR 👻')
   })
 
-const startServer = async () => {
-  app.listen(PORT, () => {
-    console.log(`LISTENING_ON 127.0.0.1:${PORT} 🤖`)
-  })
-}
-
-startServer();
+app.listen(PORT, () => {
+  console.log(`LISTENING_ON 127.0.0.1:${PORT} 🤖`)
+})

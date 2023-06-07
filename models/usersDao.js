@@ -1,15 +1,16 @@
 import { database } from './dataSource.js'
 
-const createUserDao = async (email, password, name) => {
+const createUserDao = async (email, password, name, points) => {
   try {
     await database.query(
       `INSERT INTO users (
             email,
             password,
-            name
+            name,
+            points
         ) VALUES (
-          ?, ?, ?)`,
-      [email, password, name]
+          ?, ?, ?, ?)`,
+      [email, password, name, points]
     )
   } catch (err) {
     console.log(err)
@@ -19,7 +20,7 @@ const createUserDao = async (email, password, name) => {
   }
 }
 
-const getUserByEmail = async (email) => {
+const getUserByEmailDao = async (email) => {
   try {
     const [user] = await database.query(
       `SELECT 
@@ -46,6 +47,7 @@ const getUserByIdDao = async (userId) => {
   try {
     const [ user ] = await database.query(
       `SELECT 
+        u.id,
         u.email,
         u.password,
         u.name,
@@ -64,11 +66,19 @@ const getUserByIdDao = async (userId) => {
   }
 }
 
-const deleteUser = async (userId) => {
-  try {
+const deleteUserByIdDao = async (userId) => {
+  try { 
     await database.query(
-      `DELETE FROM users
-       WHERE id = ?`,
+      `DELETE FROM
+        address
+      WHERE user_id = ?`,
+      [userId]
+    );
+
+    await database.query(
+      `DELETE FROM
+        users
+      WHERE id = ?`,
       [userId]
     );
   } catch (err) {
@@ -78,7 +88,7 @@ const deleteUser = async (userId) => {
   }
 };
 
-const updateUser = async (userId, updatedUserData) => {
+const updateUserByIdDao = async (userId, updatedUserData) => {
   try {
     await database.query(
       `UPDATE users
@@ -95,16 +105,15 @@ const updateUser = async (userId, updatedUserData) => {
   }
 };
 
-
-const address = async(userId, address1, address2) => {
+const updateAddressDao = async(userId, address1, address2) => {
   try {
-    await database.query(
+    const result = await database.query(
       `UPDATE address
         SET
-        address1 = ?,
-        address2 = ?
-        WHERE id = ?`,
-        [ address1, address2, userId]
+        address_1 = ?,
+        address_2 = ?
+        WHERE user_id = ?`,
+        [address1, address2, userId]
         )
       } catch(err) {
         console.log(err)
@@ -116,9 +125,9 @@ const address = async(userId, address1, address2) => {
 
 export {
   createUserDao,
-  getUserByEmail,
+  getUserByEmailDao,
   getUserByIdDao,
-  deleteUser,
-  updateUser,
-  address
+  deleteUserByIdDao,
+  updateUserByIdDao,
+  updateAddressDao
 }
