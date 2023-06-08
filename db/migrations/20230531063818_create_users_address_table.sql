@@ -11,5 +11,3 @@ CREATE TABLE address (
 
 -- migrate:down
 DROP TABLE address
-
-

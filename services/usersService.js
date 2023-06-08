@@ -47,9 +47,9 @@ const deleteUser = async (userId) => {
   }
 };
 
-const updateUser = async (userId, updatedUserData) => {
+const updateUser = async (userId, data) => {
   try {
-    await updateUserByIdDao(userId, updatedUserData);
+    await updateUserByIdDao(userId, data);
   } catch (err) {
     const error = new Error('Invalid_Data_Input');
     error.statusCode = 400;

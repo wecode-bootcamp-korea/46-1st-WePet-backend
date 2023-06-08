@@ -5,7 +5,3 @@ ADD COLUMN memo TEXT NULL
 
 -- migrate:down
 DROP TABLE address
-
-
-
-

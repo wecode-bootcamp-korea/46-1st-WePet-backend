@@ -21,11 +21,11 @@ const createUserDao = async (email, password, name, points) => {
         [result.insertId]
       )
     } else {
-      const error = new Error('CREATE_NOT_USER')
+      const error = new Error('Create_Not_User')
       error.statusCode = 401
     }
   } catch (err) {
-    const error = new Error('INVALID_DATA_INPUT!')
+    const error = new Error('Invalid_Data_Input')
     error.statusCode = 400
     throw error
   }
@@ -47,7 +47,7 @@ const getUserByEmailDao = async (email) => {
     )
     return user
   } catch (err) {
-    const error = new Error('INVALID_DATA_INPUT')
+    const error = new Error('Invalid_Data_Input')
     error.statusCode = 400
     throw error
   }
@@ -69,7 +69,7 @@ const getUserByIdDao = async (userId) => {
     )
     return user
   } catch (err) {
-    const error = new Error('INVALID_DATA_INPUT')
+    const error = new Error('Invalid_Data_Input')
     error.statusCode = 400
     throw error
   }
@@ -91,7 +91,7 @@ const deleteUserByIdDao = async (userId) => {
       [userId]
     )
   } catch (err) {
-    const error = new Error('INVALID_DATA_INPUT')
+    const error = new Error('Invalid_Data_Input')
     error.statusCode = 400
     throw error
   }
@@ -108,7 +108,7 @@ const updateUserByIdDao = async (userId, updatedUserData) => {
       [data.email, data.password, data.name, userId]
     )
   } catch (err) {
-    const error = new Error('INVALID_DATA_INPUT')
+    const error = new Error('Invalid_Data_Input')
     error.statusCode = 400
     throw error
   }
@@ -132,7 +132,7 @@ const updateAddressDao = async(
         return result
       } catch(err) {
         console.log(err)
-        const error = new Error('INVALID_DATA_INPUT!')
+        const error = new Error('Invalid_Data_Input')
         error.statusCode = 400
         throw error
       }
