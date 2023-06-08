@@ -63,8 +63,7 @@ const queryCreateUserOrder = async (userId) => {
         `,
       [userId]
     )
-  } catch (err) {
-    console.log(err)
+  } catch {
     const error = new Error('DATABASE_QUERY_ERROR')
     error.statusCode = 400
     throw error
