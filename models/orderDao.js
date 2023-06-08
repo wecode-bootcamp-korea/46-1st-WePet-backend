@@ -30,8 +30,6 @@ const queryCreateUserOrder = async (userId) => {
       [userId]
     )
 
-    console.log(getOrder)
-
     const orderItems = getOrder.map((order) => [
       order.id,
       order.productId,
@@ -39,8 +37,6 @@ const queryCreateUserOrder = async (userId) => {
       order.productQuantity,
       order.perItemTotal,
     ])
-
-    console.log(orderItems)
 
     const insertItems = await database.query(
       `
