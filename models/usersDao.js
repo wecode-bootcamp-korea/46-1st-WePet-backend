@@ -1,36 +1,25 @@
 import { database } from './dataSource.js'
 
-const createUser = async (email, password, name) => {
+const createUserDao = async (email, password, name, defaultPoints) => {
   try {
     const result = await database.query(
       `INSERT INTO users (
             email,
             password,
-            name
+            name,
+            points
         ) VALUES (
-          ?, ?, ?)`,
-      [email, password, name]
+          ?, ?, ?, ?)`,
+      [email, password, name, defaultPoints]
     )
-    if (result.affectedRows > 0) {
-      await database.query(
-        `INSERT INTO users_payment (
-          user_id,
-          points
-        ) VALUES (?, 500000)`,
-        [result.insertId]
-      )
-    } else {
-      const error = new Error('CREATE_NOT_USER')
-      error.statusCode = 401
-    }
   } catch (err) {
-    const error = new Error('INVALID_DATA_INPUT!')
+    const error = new Error('INVALID_DATA_INPUT')
     error.statusCode = 400
     throw error
   }
 }
 
-const getUserByEmail = async (email) => {
+const getUserByEmailDao = async (email) => {
   try {
     const [user] = await database.query(
       `SELECT 
@@ -52,11 +41,11 @@ const getUserByEmail = async (email) => {
   }
 }
 
-const getUserById = async (userId) => {
+const getUserByIdDao = async (userId) => {
   try {
-    const [user] = await database.query(
-      `SELECT
-        u.id, 
+    const [ user ] = await database.query(
+      `SELECT 
+        u.id,
         u.email,
         u.password,
         u.name,
@@ -74,11 +63,19 @@ const getUserById = async (userId) => {
   }
 }
 
-const deleteUser = async (userId) => {
-  try {
-    return await database.query(
-      `DELETE FROM users
-       WHERE id = ?`,
+const deleteUserByIdDao = async (userId) => {
+  try { 
+    await database.query(
+      `DELETE FROM
+        address
+      WHERE user_id = ?`,
+      [userId]
+    );
+
+    await database.query(
+      `DELETE FROM
+        users
+      WHERE id = ?`,
       [userId]
     )
   } catch (err) {
@@ -88,7 +85,7 @@ const deleteUser = async (userId) => {
   }
 }
 
-const updateUser = async (userId, data) => {
+const updateUserByIdDao = async (userId, data) => {
   try {
     return await database.query(
       `UPDATE users
@@ -103,6 +100,37 @@ const updateUser = async (userId, data) => {
     error.statusCode = 400
     throw error
   }
-}
+};
 
-export { createUser, getUserByEmail, getUserById, deleteUser, updateUser }
+const updateAddressDao = async(
+  userId, address1, address2, userName, phoneNumber, memo) => {
+  try {
+    const result = await database.query(
+      `INSERT INTO address (
+        address_1,
+        address_2,
+        user_name,
+        phone_number,
+        memo,
+        user_id
+      ) VALUES (?, ?, ?, ?, ?, ?)
+      `,
+        [address1, address2, userName, phoneNumber, memo, userId]
+        )
+        return result
+      } catch(err) {
+        console.log(err)
+        const error = new Error('INVALID_DATA_INPUT')
+        error.statusCode = 400
+        throw error
+      }
+    }
+
+export {
+  createUserDao,
+  getUserByEmailDao,
+  getUserByIdDao,
+  deleteUserByIdDao,
+  updateUserByIdDao,
+  updateAddressDao
+}

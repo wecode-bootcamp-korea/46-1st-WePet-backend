@@ -26,10 +26,6 @@ database
     console.error('DATABASE_INITIALIZATION_ERROR 👻')
   })
 
-const startServer = async () => {
-  app.listen(PORT, () => {
-    console.log(`LISTENING_ON 127.0.0.1:${PORT} 🤖`)
-  })
-}
-
-startServer()
+app.listen(PORT, () => {
+  console.log(`LISTENING_ON 127.0.0.1:${PORT} 🤖`)
+})

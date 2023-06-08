@@ -1,116 +1,91 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
-import * as userDao from '../models/usersDao.js'
-import * as addressDao from '../models/addressDao.js'
+import { createUserDao, getUserByEmailDao, getUserByIdDao, deleteUserByIdDao, updateUserByIdDao, updateAddressDao } from '../models/usersDao.js'
 
 const signUp = async (email, password, name) => {
   const pwValidation = new RegExp(
     '^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,20})'
   )
   if (!pwValidation.test(password)) {
-    const error = new Error('PASSWORD_IS_NOT_VALID')
+    const error = new Error('PASSWORD IS NOT VALID')
     error.statusCode = 400
     throw error
   }
   const saltRounds = 10
+  const defaultPoints = 500000;
   const hashedPassword = await bcrypt.hash(password, saltRounds)
-  const createUser = await userDao.createUser(email, hashedPassword, name)
+  const createUser = await createUserDao(email, hashedPassword, name, defaultPoints)
 
   return createUser
 }
 
-const checkDuplicateEmail = async (email) => {
-  const user = await userDao.getUserByEmail(email)
-
-  if (user) {
-    return true
-  } else {
-    return false
-  }
-}
-
-const login = async (email, plaintextPassword) => {
-  const user = await userDao.getUserByEmail(email)
-
+const login = async (email, password) => {
+  const user = await getUserByEmailDao(email)
   if (!user) {
-    const error = new Error('SPECIFIED_USER_DOES_NOT_EXIST')
+    const error = new Error('SPECIFIED USER DOES NOT EXIST')
     error.statusCode = 400
     throw error
   }
-
-  const result = await bcrypt.compare(plaintextPassword, user.password)
+  const result = await bcrypt.compare(password, user.password)
 
   if (!result) {
-    const err = new Error('INVALID_PASSWORD')
+    const err = new Error('INVALID PASSWORD')
     err.statusCode = 400
     throw err
   }
-
-  return jwt.sign({ id: user.id }, process.env.SECRET_JWT_KEY, {
-    algorithm: process.env.ALGORITHM,
-    expiresIn: process.env.JWT_EXPIRES_IN,
-  })
+  return jwt.sign({ sub: user.id, email: user.email }, process.env.JWT_SECRET)
 }
 
-const getUserById = async (userId) => {
-  const user = await userDao.getUserById(userId)
-  if (!user) {
-    const error = new Error('USER_NOT_FOUND')
-    error.statusCode = 400
-    throw error
-  }
-
-  return user
-}
-
-const deletedUser = async (userId) => {
+const deleteUser = async (userId) => {
   try {
-    const result = await userDao.deleteUser(userId)
-    return result
+    const result = await deleteUserByIdDao(userId);
+    return result;
   } catch (err) {
-    const error = new Error('INVALID_DATA_INPUT!')
-    error.statusCode = 404
-    throw error
+    const error = new Error('INVALID_DATA_INPUT');
+    error.statusCode = 400;
+    throw error;
   }
-}
+};
 
 const updateUser = async (userId, data) => {
   try {
-    return await userDao.updateUser(userId, data)
+    await updateUserByIdDao(userId, data);
   } catch (err) {
-    const error = new Error('INVALID_DATA_INPUT')
-    error.statusCode = 400
-    throw error
+    const error = new Error('INVALID_DATA_INPUT');
+    error.statusCode = 400;
+    throw error;
   }
-}
+};
 
-const createNewAddress = async (userId, address1, address2) => {
-  try {
-    await addressDao.createAddress(userId, address1, address2)
-  } catch (err) {
-    const error = new Error('INVALID_DATA_INPUT')
-    error.statusCode = 400
-    throw error
-  }
-}
+const updateUserAddress = async(userId, address1, address2, userName, phoneNumber, memo) => {
+    await updateAddressDao(userId, address1, address2, userName, phoneNumber, memo)
+};
 
-const updatePayment = async () => {
-  try {
-    await usersPaymentDao.payment(userPoints, userId)
-  } catch (err) {
-    const error = new Error('INVALID_DATA_INPUT')
+const checkDuplicateEmail = async (email) => {
+  const user = await getUserByEmailDao(email);
+  if (user) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+const getUserById = async (userId) => {
+  const user = await getUserByIdDao(userId)
+  if (!user) {
+    const error = new Error('USER NOT FOUND')
     error.statusCode = 400
     throw error
   }
+  return user
 }
 
 export {
   signUp,
   login,
   getUserById,
-  deletedUser,
+  deleteUser,
   updateUser,
   checkDuplicateEmail,
-  createNewAddress,
-  updatePayment,
+  updateUserAddress,
 }
