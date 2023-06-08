@@ -58,8 +58,7 @@ const queryCreateUserOrder = async (userId) => {
         `,
       [userId]
     )
-  } catch (err) {
-    console.log(err)
+  } catch {
     const error = new Error('DATABASE_QUERY_ERROR')
     error.statusCode = 400
     throw error
@@ -93,7 +92,6 @@ const queryOrderData = async (userId) => {
 const queryInsertOrderTotal = async (userId, orderTotal) => {
   try {
     const orderNum = orderId().generate()
-    console.log(orderNum)
     const data = await database.query(
       `
       UPDATE
@@ -143,8 +141,7 @@ const queryUserOrderHistory = async (userId) => {
       [userId]
     )
     return data
-  } catch (err) {
-    console.log(err)
+  } catch {
     const error = new Error('DATABASE_QUERY_ERROR')
     error.statusCode = 400
     throw error
