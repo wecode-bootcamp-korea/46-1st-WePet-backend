@@ -14,12 +14,13 @@ const queryCreateUserOrder = async (userId) => {
 
     const getOrder = await database.query(
       `
-      SELECT o.id,
-        sc.user_id,
-        sc.product_id,
-        p.product_price,
-        sc.quantity,
-      SUM(p.product_price * sc.quantity) AS per_item_total
+      SELECT 
+        o.id,
+        sc.user_id AS userId,
+        sc.product_id AS productId,
+        p.product_price AS productPrice,
+        sc.quantity AS productQuantity,
+      SUM(p.product_price * sc.quantity) AS perItemTotal
       FROM shopping_carts AS sc
       JOIN orders AS o ON sc.user_id = o.user_id
       JOIN products AS p ON sc.product_id = p.id
@@ -31,10 +32,10 @@ const queryCreateUserOrder = async (userId) => {
 
     const orderItems = getOrder.map((order) => [
       order.id,
-      order.product_id,
-      order.product_price,
-      order.quantity,
-      order.per_item_total,
+      order.productId,
+      order.productPrice,
+      order.productQuantity,
+      order.perItemTotal,
     ])
 
     const insertItems = await database.query(
