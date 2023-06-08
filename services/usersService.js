@@ -71,7 +71,7 @@ const checkDuplicateEmail = async (email) => {
 };
 
 const getUserById = async (userId) => {
-  const user = await userDao.getUserByIdDao(userId)
+  const user = await getUserByIdDao(userId)
   if (!user) {
     const error = new Error('User Not Found')
     error.statusCode = 400

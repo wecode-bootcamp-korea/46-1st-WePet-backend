@@ -116,14 +116,23 @@ const updateUserByIdDao = async (userId, updatedUserData) => {
 
 const updateAddressDao = async(userId, address1, address2) => {
   try {
+    console.log(userId)
     const result = await database.query(
-      `UPDATE address
-        SET
-        address_1 = ?,
-        address_2 = ?
-        WHERE user_id = ?`,
+      /*
+      이름 :
+      번호:
+      주소:
+      상세주소:
+      */
+      `INSERT INTO address (
+        address_1,
+        address_2,
+        user_id
+      ) VALUES (?, ?, ?)
+      `,
         [address1, address2, userId]
         )
+        return result
       } catch(err) {
         console.log(err)
         const error = new Error('INVALID_DATA_INPUT!')

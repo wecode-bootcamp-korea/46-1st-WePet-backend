@@ -1,4 +1,4 @@
-import { usersService } from '../services/index.js'
+import { userService } from '../services/index.js'
 import { catchAsync } from '../utils/errorHandler.js'
 import { checkDuplicateEmail } from '../services/usersService.js'
 
@@ -14,7 +14,7 @@ const signUp = catchAsync(async (req, res) => {
       error.statusCode = 400
       throw error
     }
-    const result = await usersService.signUp(email, password, name)
+    const result = await userService.signUp(email, password, name)
     return res.status(201).json({ message: 'Signup_Success', result })
   })
 
@@ -25,27 +25,27 @@ const login = catchAsync(async (req, res) => {
       error.statusCode = 400
       throw error
     }
-    const result = await usersService.login(email, password)
+    const result = await userService.login(email, password)
     return res.status(201).json({ message: 'Login_Success', result })
   })
 
 const deleteUser = catchAsync(async (req, res) => {
     const userId = req.user.id;
-    const result = await usersService.deleteUser(userId);
+    const result = await userService.deleteUser(userId);
     res.status(201).json({ message: 'User Delete Success', result });
   })
 
 const updateUser = catchAsync(async (req, res) => {
   const userId = req.user.id;
   const updatedUserData = req.body;
-  await usersService.updateUser(userId, updatedUserData);
+  await userService.updateUser(userId, updatedUserData);
   return res.status(201).json({message:'Update Success', updatedUserData})
   })
 
 const updateAddress = catchAsync(async(req, res) => {
   const userId = req.user.id;
   const { address1, address2 } = req.body;
-  await usersService.updateUserAddress(userId, address1, address2);
+  await userService.updateUserAddress(userId, address1, address2);
   return res.status(200).json({ message:'Update Success' });
   })
 

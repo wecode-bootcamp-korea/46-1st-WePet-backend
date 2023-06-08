@@ -7,8 +7,8 @@ const usersRouter = Router()
 
 usersRouter.post('/signup', userController.signUp);
 usersRouter.post('/login', userController.login);
+usersRouter.post('/address', loginRequired, userController.updateAddress);
 usersRouter.patch('/information', userController.updateUser);
-usersRouter.patch('/address', loginRequired, userController.updateAddress);
 usersRouter.delete('', loginRequired, userController.deleteUser);
 
 export { usersRouter }
