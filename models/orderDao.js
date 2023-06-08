@@ -8,7 +8,7 @@ const queryCreateUserOrder = async (userId) => {
         INSERT INTO
           orders(user_id)
         VALUES(?)
-         `,
+      `,
       [userId]
     )
 
@@ -24,11 +24,13 @@ const queryCreateUserOrder = async (userId) => {
       FROM shopping_carts AS sc
       JOIN orders AS o ON sc.user_id = o.user_id
       JOIN products AS p ON sc.product_id = p.id
-      WHERE o.user_id = 5
-      GROUP BY o.id, sc.user_id, sc.product_id, sc.quantity;
-          `,
+      WHERE o.user_id = ?
+      GROUP BY o.id, userId, productId, productQuantity;
+      `,
       [userId]
     )
+
+    console.log(getOrder)
 
     const orderItems = getOrder.map((order) => [
       order.id,
@@ -37,6 +39,8 @@ const queryCreateUserOrder = async (userId) => {
       order.productQuantity,
       order.perItemTotal,
     ])
+
+    console.log(orderItems)
 
     const insertItems = await database.query(
       `
@@ -59,7 +63,8 @@ const queryCreateUserOrder = async (userId) => {
         `,
       [userId]
     )
-  } catch {
+  } catch (err) {
+    console.log(err)
     const error = new Error('DATABASE_QUERY_ERROR')
     error.statusCode = 400
     throw error
