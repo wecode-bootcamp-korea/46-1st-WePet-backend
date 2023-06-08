@@ -114,23 +114,20 @@ const updateUserByIdDao = async (userId, updatedUserData) => {
   }
 };
 
-const updateAddressDao = async(userId, address1, address2) => {
+const updateAddressDao = async(
+  userId, address1, address2, user_name, phone_number, memo) => {
   try {
-    console.log(userId)
     const result = await database.query(
-      /*
-      이름 :
-      번호:
-      주소:
-      상세주소:
-      */
       `INSERT INTO address (
         address_1,
         address_2,
+        user_name,
+        phone_number,
+        memo,
         user_id
-      ) VALUES (?, ?, ?)
+      ) VALUES (?, ?, ?, ?, ?, ?)
       `,
-        [address1, address2, userId]
+        [address1, address2, user_name, phone_number, memo, userId]
         )
         return result
       } catch(err) {
