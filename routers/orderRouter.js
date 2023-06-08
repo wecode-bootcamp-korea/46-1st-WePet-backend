@@ -12,5 +12,10 @@ orderRouter.post(
   loginRequired,
   orderController.postUserOrderTotal
 )
+orderRouter.get(
+  '/order-history',
+  loginRequired,
+  orderController.getUserOrderHistory
+)
 
 export { orderRouter }

@@ -1,4 +1,5 @@
 import { database } from './dataSource.js'
+import orderId from 'order-id'
 
 const queryCreateUserOrder = async (userId) => {
   try {
@@ -12,28 +13,31 @@ const queryCreateUserOrder = async (userId) => {
     )
 
     const getOrder = await database.query(
-      `SELECT
-          o.id,
-          sc.user_id,
-          sc.product_id,
-          sc.quantity,
-          p.product_price 
-        FROM shopping_carts AS sc
-        JOIN orders AS o ON sc.user_id = o.user_id
-        JOIN products AS p ON sc.product_id = p.id
-        WHERE
-          o.user_id = ?        
+      `
+      SELECT o.id,
+        sc.user_id,
+        sc.product_id,
+        p.product_price,
+        sc.quantity,
+      SUM(p.product_price * sc.quantity) AS per_item_total
+      FROM shopping_carts AS sc
+      JOIN orders AS o ON sc.user_id = o.user_id
+      JOIN products AS p ON sc.product_id = p.id
+      WHERE o.user_id = 5
+      GROUP BY o.id, sc.user_id, sc.product_id, sc.quantity;
           `,
       [userId]
     )
+
     const orderItems = getOrder.map((order) => [
       order.id,
       order.product_id,
       order.product_price,
       order.quantity,
-      order.order_item_price * order.quantity,
+      order.per_item_total,
     ])
-    await database.query(
+
+    const insertItems = await database.query(
       `
       INSERT INTO 
       order_items (
@@ -41,7 +45,7 @@ const queryCreateUserOrder = async (userId) => {
         product_id, 
         order_item_price, 
         order_item_quantity,
-        itemTotal
+        item_total
         )
       VALUES ?
     `,
@@ -54,7 +58,8 @@ const queryCreateUserOrder = async (userId) => {
         `,
       [userId]
     )
-  } catch {
+  } catch (err) {
+    console.log(err)
     const error = new Error('DATABASE_QUERY_ERROR')
     error.statusCode = 400
     throw error
@@ -65,14 +70,14 @@ const queryOrderData = async (userId) => {
   try {
     const data = await database.query(
       `SELECT
-        order_items.product_id AS productId,
+      order_items.product_id AS productId,
         order_items.order_item_quantity AS itemQuantity,
         order_items.order_item_price AS itemPrice,
         order_items.item_total AS itemTotal
-      FROM
+        FROM
         order_items
       JOIN
-        orders AS o ON o.id = order_items.orders_id
+      orders AS o ON o.id = order_items.orders_id
       WHERE o.user_id = ?
       `,
       [userId]
@@ -87,16 +92,55 @@ const queryOrderData = async (userId) => {
 
 const queryInsertOrderTotal = async (userId, orderTotal) => {
   try {
+    const orderNum = orderId().generate()
+    console.log(orderNum)
     const data = await database.query(
       `
       UPDATE
         orders
       SET
-        order_total = ?
+        order_total = ?,
+        order_number = ?
       WHERE 
         user_id = ?
       `,
-      [orderTotal, userId]
+      [orderTotal, orderNum, userId]
+    )
+    return data
+  } catch {
+    const error = new Error('DATABASE_QUERY_ERROR')
+    error.statusCode = 400
+    throw error
+  }
+}
+
+const queryUserOrderHistory = async (userId) => {
+  try {
+    const data = await database.query(
+      `
+      SELECT
+      JSON_OBJECT(
+        'OrderNumber', o.order_number,
+        'totalOrderPrice', o.order_total,
+        'orderItems', JSON_ARRAYAGG(
+          JSON_OBJECT(
+            'productId', oi.product_id,
+            'itemPrice', oi.order_item_price,
+            'itemQuantity', oi.order_item_quantity,
+            'perItemTotalPrice', oi.item_total
+          )
+        )
+      ) AS orderData
+      FROM
+        orders AS o
+      JOIN
+        order_items AS oi ON o.id = oi.orders_id
+      WHERE
+        o.user_id = ?
+      GROUP BY
+      o.order_number, o.order_total;
+      `,
+      [userId]
     )
     return data
   } catch (err) {
@@ -107,4 +151,9 @@ const queryInsertOrderTotal = async (userId, orderTotal) => {
   }
 }
 
-export { queryCreateUserOrder, queryOrderData, queryInsertOrderTotal }
+export {
+  queryCreateUserOrder,
+  queryOrderData,
+  queryInsertOrderTotal,
+  queryUserOrderHistory,
+}
