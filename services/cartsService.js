@@ -9,11 +9,11 @@ import {
 } from '../models/cartsDao.js'
 
 const getCartItems = async (userId) => {
-  return await queryCartItems(userId)
+  return queryCartItems(userId)
 }
 
-const postItemToCart = async (userId, productId, productQuantity) => {
-  return queryInsertItemToCart(userId, productId, productQuantity)
+const postItemToCart = async (userId, productId) => {
+  return queryInsertItemToCart(userId, productId)
 }
 
 const putItemQuantityInCart = async (userId, productId, productQuantity) => {
@@ -40,6 +40,10 @@ const deleteAllItemInCart = async (userId) => {
   return queryDeleteAllItemInCart(userId)
 }
 
+const createUserOrder = async (userId) => {
+  return queryUserOrder(userId)
+}
+
 export {
   getCartItems,
   postItemToCart,
@@ -48,4 +52,5 @@ export {
   subtractItemQuantityInCart,
   deleteItemInCart,
   deleteAllItemInCart,
+  createUserOrder,
 }
