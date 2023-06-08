@@ -57,8 +57,8 @@ const updateUser = async (userId, data) => {
   }
 };
 
-const updateUserAddress = async(userId, address1, address2, user_name, phone_number, memo) => {
-    await updateAddressDao(userId, address1, address2, user_name, phone_number, memo)
+const updateUserAddress = async(userId, address1, address2, userName, phoneNumber, memo) => {
+    await updateAddressDao(userId, address1, address2, userName, phoneNumber, memo)
 };
 
 const checkDuplicateEmail = async (email) => {

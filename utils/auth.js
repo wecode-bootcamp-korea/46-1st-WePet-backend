@@ -9,7 +9,7 @@ const loginRequired = async (req, res, next) => {
       const error = new Error('NEED_ACCESS_TOKEN')
       error.statusCode = 401
 
-      return res.status(error.statusCode).json({ message: error.message })
+      throw error
     }
 
     const decoded = await jwt.verify(accessToken, process.env.SECRET_JWT_KEY)
@@ -20,7 +20,7 @@ const loginRequired = async (req, res, next) => {
       const error = new Error('USER_DOES_NOT_EXIST')
       error.statusCode = 404
 
-      return res.status(error.statusCode).json({ message: error.message })
+      throw error
     }
 
     req.user = user
@@ -28,20 +28,6 @@ const loginRequired = async (req, res, next) => {
   } catch (error) {
     next(error)
   }
-
-  const decoded = await jwt.verify(accessToken, process.env.JWT_SECRET)
-
-  const user = await userService.getUserById(decoded.sub)
-
-  if (!user) {
-    const error = new Error('USER_DOES_NOT_EXIST')
-    error.statusCode = 404
-
-    return res.status(error.statusCode).json({ message: error.message })
-  }
-
-  req.user = user
-  next()
 }
 
 export { loginRequired }

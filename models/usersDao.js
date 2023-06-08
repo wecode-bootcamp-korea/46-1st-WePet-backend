@@ -115,7 +115,7 @@ const updateUserByIdDao = async (userId, updatedUserData) => {
 };
 
 const updateAddressDao = async(
-  userId, address1, address2, user_name, phone_number, memo) => {
+  userId, address1, address2, userName, phoneNumber, memo) => {
   try {
     const result = await database.query(
       `INSERT INTO address (
@@ -127,7 +127,7 @@ const updateAddressDao = async(
         user_id
       ) VALUES (?, ?, ?, ?, ?, ?)
       `,
-        [address1, address2, user_name, phone_number, memo, userId]
+        [address1, address2, userName, phoneNumber, memo, userId]
         )
         return result
       } catch(err) {

@@ -44,8 +44,8 @@ const updateUser = catchAsync(async (req, res) => {
 
 const updateAddress = catchAsync(async(req, res) => {
   const userId = req.user.id;
-  const { address1, address2, user_name, phone_number, memo } = req.body;
-  await userService.updateUserAddress(userId, address1, address2, user_name, phone_number, memo);
+  const { address1, address2, userName, phoneNumber, memo } = req.body;
+  await userService.updateUserAddress(userId, address1, address2, userName, phoneNumber, memo);
   return res.status(200).json({ message:'Update Success' });
   })
 
