@@ -7,7 +7,7 @@ const signUp = async (email, password, name) => {
     '^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,20})'
   )
   if (!pwValidation.test(password)) {
-    const error = new Error('Password Is Not Valid')
+    const error = new Error('PASSWORD IS NOT VALID')
     error.statusCode = 400
     throw error
   }
@@ -22,14 +22,14 @@ const signUp = async (email, password, name) => {
 const login = async (email, password) => {
   const user = await getUserByEmailDao(email)
   if (!user) {
-    const error = new Error('Specified User Does Not Exist')
+    const error = new Error('SPECIFIED USER DOES NOT EXIST')
     error.statusCode = 400
     throw error
   }
   const result = await bcrypt.compare(password, user.password)
 
   if (!result) {
-    const err = new Error('Invalid Password')
+    const err = new Error('INVALID PASSWORD')
     err.statusCode = 400
     throw err
   }
@@ -41,7 +41,7 @@ const deleteUser = async (userId) => {
     const result = await deleteUserByIdDao(userId);
     return result;
   } catch (err) {
-    const error = new Error('Invalid_Data_Input');
+    const error = new Error('INVALID_DATA_INPUT');
     error.statusCode = 400;
     throw error;
   }
@@ -51,7 +51,7 @@ const updateUser = async (userId, data) => {
   try {
     await updateUserByIdDao(userId, data);
   } catch (err) {
-    const error = new Error('Invalid_Data_Input');
+    const error = new Error('INVALID_DATA_INPUT');
     error.statusCode = 400;
     throw error;
   }
@@ -73,11 +73,10 @@ const checkDuplicateEmail = async (email) => {
 const getUserById = async (userId) => {
   const user = await getUserByIdDao(userId)
   if (!user) {
-    const error = new Error('User Not Found')
+    const error = new Error('USER NOT FOUND')
     error.statusCode = 400
     throw error
   }
-
   return user
 }
 

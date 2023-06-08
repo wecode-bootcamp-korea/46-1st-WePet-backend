@@ -1,6 +1,6 @@
 import { database } from './dataSource.js'
 
-const createUserDao = async (email, password, name, points) => {
+const createUserDao = async (email, password, name, defaultPoints) => {
   try {
     const result = await database.query(
       `INSERT INTO users (
@@ -10,22 +10,10 @@ const createUserDao = async (email, password, name, points) => {
             points
         ) VALUES (
           ?, ?, ?, ?)`,
-      [email, password, name, points]
+      [email, password, name, defaultPoints]
     )
-    if (result.affectedRows > 0) {
-      await database.query(
-        `INSERT INTO users_payment (
-          user_id,
-          points
-        ) VALUES (?, 500000)`,
-        [result.insertId]
-      )
-    } else {
-      const error = new Error('Create_Not_User')
-      error.statusCode = 401
-    }
   } catch (err) {
-    const error = new Error('Invalid_Data_Input')
+    const error = new Error('INVALID_DATA_INPUT')
     error.statusCode = 400
     throw error
   }
@@ -47,7 +35,7 @@ const getUserByEmailDao = async (email) => {
     )
     return user
   } catch (err) {
-    const error = new Error('Invalid_Data_Input')
+    const error = new Error('INVALID_DATA_INPUT')
     error.statusCode = 400
     throw error
   }
@@ -69,7 +57,7 @@ const getUserByIdDao = async (userId) => {
     )
     return user
   } catch (err) {
-    const error = new Error('Invalid_Data_Input')
+    const error = new Error('INVALID_DATA_INPUT')
     error.statusCode = 400
     throw error
   }
@@ -91,13 +79,13 @@ const deleteUserByIdDao = async (userId) => {
       [userId]
     )
   } catch (err) {
-    const error = new Error('Invalid_Data_Input')
+    const error = new Error('INVALID_DATA_INPUT')
     error.statusCode = 400
     throw error
   }
 }
 
-const updateUserByIdDao = async (userId, updatedUserData) => {
+const updateUserByIdDao = async (userId, data) => {
   try {
     return await database.query(
       `UPDATE users
@@ -108,7 +96,7 @@ const updateUserByIdDao = async (userId, updatedUserData) => {
       [data.email, data.password, data.name, userId]
     )
   } catch (err) {
-    const error = new Error('Invalid_Data_Input')
+    const error = new Error('INVALID_DATA_INPUT')
     error.statusCode = 400
     throw error
   }
@@ -132,7 +120,7 @@ const updateAddressDao = async(
         return result
       } catch(err) {
         console.log(err)
-        const error = new Error('Invalid_Data_Input')
+        const error = new Error('INVALID_DATA_INPUT')
         error.statusCode = 400
         throw error
       }

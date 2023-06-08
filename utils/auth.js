@@ -12,9 +12,9 @@ const loginRequired = async (req, res, next) => {
       throw error
     }
 
-    const decoded = await jwt.verify(accessToken, process.env.SECRET_JWT_KEY)
+    const decoded = await jwt.verify(accessToken, process.env.JWT_SECRET)
 
-    const user = await userService.getUserById(decoded.id)
+    const user = await userService.getUserById(decoded.sub)
 
     if (!user) {
       const error = new Error('USER_DOES_NOT_EXIST')
