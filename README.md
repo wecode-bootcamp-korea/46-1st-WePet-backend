@@ -2,9 +2,7 @@
 
 ## Introduction:
 
-Our project, the WePet RESTful API, was developed with the aim of creating an e-commerce platform that offers a carefully curated selection of unique and safe pet products for our beloved "dogs and cats." We recognized the need to cater to pet owners who view their furry companions as integral members of their families, rather than mere animals. Our goal was to address the specific challenges faced by these owners, such as the overwhelming variety of products available on the market and the trial-and-error process of finding the right ones. Extensive research revealed that our target audience primarily consisted of females in the 20s-40s age range who sought such a service. We believed that our platform would stand out by offering a thoughtfully curated collection of tested and high-quality products. To design our user interface and user experience, we drew inspiration from the simplicity and whimsical approach of [Baemin Moongu](https://brandstore.baemin.com/), which specializes in stationery, books, and gifts.
-
----
+Our project, the WePet RESTful API, was developed with the aim of creating an e-commerce platform that offers a carefully curated selection of unique and safe pet products for our beloved "dogs and cats." We recognized the need to cater to pet owners who view their furry companions as integral members of their families, rather than mere animals. Our goal was to address the specific challenges faced by these owners, such as the overwhelming variety of products available on the market and the trial-and-error process of finding the right ones. Extensive research revealed that our target audience primarily consisted of females in the 20s-40s age range who sought such a service. We believed that our platform would stand out by offering a thoughtfully curated collection of tested and high-quality products. To design our user interface and user experience, we drew inspiration from the simplicity and whimsical approach of [Baemin Stationary](https://brandstore.baemin.com/), which specializes in stationery, books, and gifts.
 
 ## Description:
 
@@ -25,8 +23,6 @@ For this project, we selected a technology stack consisting of **Node.js, Expres
 
 Throughout the course of this project, we encountered several challenges that provided valuable learning opportunities. One notable challenge was understanding the user flow and ensuring consistent JSON key data and response messages for efficient utilization by the frontend team. Additionally, we honed our skills in writing efficient SQL queries to optimize database performance.
 
----
-
 ## How to run our project:
 
 To run our project, follow these steps:
@@ -37,19 +33,21 @@ To run our project, follow these steps:
 4. Once you have completed the above steps, type `npm start` to start the server.
 5. For detailed information about the API endpoints, please refer to our WePet API Postman documentation provided below.
 
-[WePet](https://documenter.getpostman.com/view/20495360/2s93sXbZk7)
-
----
+[WePet POSTMAN API DOCUMENTATION](https://documenter.getpostman.com/view/20495360/2s93sXbZk7)
 
 ## Team Members:
 
-### Front End [Github](https://github.com/wecode-bootcamp-korea/46-1st-WePet-frontend):
+### Front End
 
-    - [AGNESBAEK](https://github.com/AGNESBAEK)
-    - [zozusin](https://github.com/AGNESBAEK)
-    - [sstaar91](https://github.com/sstaar91)
+[Front-End Team Github](https://github.com/wecode-bootcamp-korea/46-1st-WePet-frontend):
 
-### Back End [Github](https://github.com/wecode-bootcamp-korea/46-1st-WePet-backend):
+[AGNESBAEK](https://github.com/AGNESBAEK)
+[zozusin](https://github.com/AGNESBAEK)
+[sstaar91](https://github.com/sstaar91)
 
-    - [lee-kwanyong](https://github.com/lee-kwanyong)
-    - [ts-oh](https://github.com/ts-oh)
+### Back End
+
+[Back-End Team Github](https://github.com/wecode-bootcamp-korea/46-1st-WePet-backend):
+
+[lee-kwanyong](https://github.com/lee-kwanyong)
+[ts-oh](https://github.com/ts-oh)
