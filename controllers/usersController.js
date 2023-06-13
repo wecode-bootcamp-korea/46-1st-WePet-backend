@@ -1,19 +1,7 @@
 import { userService } from '../services/index.js'
 import { catchAsync } from '../utils/errorHandler.js'
-import { checkDuplicateEmail } from '../services/usersService.js'
-
 const signUp = catchAsync(async (req, res) => {
     const { email, password, name } = req.body
-    const isDuplicateEmail = await checkDuplicateEmail(email);  
-    if (!email || !password || !name) {
-      const error = new Error('KEY_ERROR')
-      error.statusCode = 400
-      throw error
-    } else if(isDuplicateEmail === true) {
-      const error = new Error('DUPLICATE_EMAIL')
-      error.statusCode = 400
-      throw error
-    }
     const result = await userService.signUp(email, password, name)
     return res.status(201).json({ message: 'SIGNUP_SUCCESS', result })
   })
@@ -49,10 +37,18 @@ const updateAddress = catchAsync(async(req, res) => {
   return res.status(200).json({ message:'UPDATE_SUCCESS' });
   })
 
+const password = catchAsync(async(req, res) => {
+  const userId = req.user.id;
+  const { password } = req.body;
+  const result = await userService.changePassword(userId, password)
+  return res.status(200).json({ message:'UPDATE_SUCCESS', result });
+})
+
 export {
   signUp,
   login,
   deleteUser,
   updateUser,
   updateAddress,
+  password,
  }

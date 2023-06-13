@@ -43,7 +43,7 @@ const getUserByEmailDao = async (email) => {
 
 const getUserByIdDao = async (userId) => {
   try {
-    const [ user ] = await database.query(
+    const [user] = await database.query(
       `SELECT 
         u.id,
         u.email,
@@ -63,15 +63,15 @@ const getUserByIdDao = async (userId) => {
   }
 }
 
+//transactions
 const deleteUserByIdDao = async (userId) => {
-  try { 
+  try {
     await database.query(
       `DELETE FROM
         address
       WHERE user_id = ?`,
       [userId]
-    );
-
+    )
     await database.query(
       `DELETE FROM
         users
@@ -87,23 +87,45 @@ const deleteUserByIdDao = async (userId) => {
 
 const updateUserByIdDao = async (userId, data) => {
   try {
-    return await database.query(
+    await database.query(
       `UPDATE users
        SET email = ?,
-           password = ?,
            name = ?
        WHERE id = ?`,
-      [data.email, data.password, data.name, userId]
+      [data.email, data.name, userId]
     )
   } catch (err) {
     const error = new Error('INVALID_DATA_INPUT')
     error.statusCode = 400
     throw error
   }
-};
+}
 
-const updateAddressDao = async(
-  userId, address1, address2, userName, phoneNumber, memo) => {
+const updatePassword = async (userId, password) => {
+  try {
+    await database.query(
+      `UPDATE users
+      SET password = ?
+      WHERE id = ?
+      `,
+      [password, userId]
+    )
+  } catch (err) {
+    console.log(err)
+    const error = new Error('INVALID_DATA_INPUT')
+    error.statusCode = 400
+    throw error
+  }
+}
+
+const updateAddressDao = async (
+  userId,
+  address1,
+  address2,
+  userName,
+  phoneNumber,
+  memo
+) => {
   try {
     const result = await database.query(
       `INSERT INTO address (
@@ -115,16 +137,16 @@ const updateAddressDao = async(
         user_id
       ) VALUES (?, ?, ?, ?, ?, ?)
       `,
-        [address1, address2, userName, phoneNumber, memo, userId]
-        )
-        return result
-      } catch(err) {
-        console.log(err)
-        const error = new Error('INVALID_DATA_INPUT')
-        error.statusCode = 400
-        throw error
-      }
-    }
+      [address1, address2, userName, phoneNumber, memo, userId]
+    )
+    return result
+  } catch (err) {
+    console.log(err)
+    const error = new Error('INVALID_DATA_INPUT')
+    error.statusCode = 400
+    throw error
+  }
+}
 
 export {
   createUserDao,
@@ -132,5 +154,6 @@ export {
   getUserByIdDao,
   deleteUserByIdDao,
   updateUserByIdDao,
-  updateAddressDao
+  updateAddressDao,
+  updatePassword,
 }
