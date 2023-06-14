@@ -1,6 +1,13 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
-import { createUserDao, getUserByEmailDao, getUserByIdDao, deleteUserByIdDao, updateUserByIdDao, updateAddressDao } from '../models/usersDao.js'
+import {
+  createUserDao,
+  getUserByEmailDao,
+  getUserByIdDao,
+  deleteUserByIdDao,
+  updateUserByIdDao,
+  updateAddressDao,
+} from '../models/usersDao.js'
 
 const signUp = async (email, password, name) => {
   const pwValidation = new RegExp(
@@ -12,9 +19,14 @@ const signUp = async (email, password, name) => {
     throw error
   }
   const saltRounds = 10
-  const defaultPoints = 500000;
+  const defaultPoints = 500000
   const hashedPassword = await bcrypt.hash(password, saltRounds)
-  const createUser = await createUserDao(email, hashedPassword, name, defaultPoints)
+  const createUser = await createUserDao(
+    email,
+    hashedPassword,
+    name,
+    defaultPoints
+  )
 
   return createUser
 }
@@ -33,42 +45,59 @@ const login = async (email, password) => {
     err.statusCode = 400
     throw err
   }
-  return jwt.sign({ sub: user.id, email: user.email }, process.env.JWT_SECRET)
+  return jwt.sign(
+    { id: user.id, email: user.email },
+    process.env.SECRET_JWT_KEY
+  )
 }
 
 const deleteUser = async (userId) => {
   try {
-    const result = await deleteUserByIdDao(userId);
-    return result;
+    const result = await deleteUserByIdDao(userId)
+    return result
   } catch (err) {
-    const error = new Error('INVALID_DATA_INPUT');
-    error.statusCode = 400;
-    throw error;
+    const error = new Error('INVALID_DATA_INPUT')
+    error.statusCode = 400
+    throw error
   }
-};
+}
 
 const updateUser = async (userId, data) => {
   try {
-    await updateUserByIdDao(userId, data);
+    await updateUserByIdDao(userId, data)
   } catch (err) {
-    const error = new Error('INVALID_DATA_INPUT');
-    error.statusCode = 400;
-    throw error;
+    const error = new Error('INVALID_DATA_INPUT')
+    error.statusCode = 400
+    throw error
   }
-};
+}
 
-const updateUserAddress = async(userId, address1, address2, userName, phoneNumber, memo) => {
-    await updateAddressDao(userId, address1, address2, userName, phoneNumber, memo)
-};
+const updateUserAddress = async (
+  userId,
+  address1,
+  address2,
+  userName,
+  phoneNumber,
+  memo
+) => {
+  await updateAddressDao(
+    userId,
+    address1,
+    address2,
+    userName,
+    phoneNumber,
+    memo
+  )
+}
 
 const checkDuplicateEmail = async (email) => {
-  const user = await getUserByEmailDao(email);
+  const user = await getUserByEmailDao(email)
   if (user) {
-    return true;
+    return true
   } else {
-    return false;
+    return false
   }
-};
+}
 
 const getUserById = async (userId) => {
   const user = await getUserByIdDao(userId)

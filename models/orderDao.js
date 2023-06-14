@@ -70,14 +70,18 @@ const queryOrderData = async (userId) => {
   try {
     const data = await database.query(
       `SELECT
-      order_items.product_id AS productId,
+        products.product_name AS productName,
+        products.main_image_thumbnail AS productImage,
+        order_items.product_id AS productId,
         order_items.order_item_quantity AS itemQuantity,
         order_items.order_item_price AS itemPrice,
         order_items.item_total AS itemTotal
         FROM
         order_items
       JOIN
-      orders AS o ON o.id = order_items.orders_id
+        orders AS o ON o.id = order_items.orders_id
+      JOIN
+        products ON products.id = order_items.product_id
       WHERE o.user_id = ?
       `,
       [userId]
@@ -124,6 +128,7 @@ const queryUserOrderHistory = async (userId) => {
         'orderItems', JSON_ARRAYAGG(
           JSON_OBJECT(
             'productId', oi.product_id,
+            'productName', p.product_name,
             'itemPrice', oi.order_item_price,
             'itemQuantity', oi.order_item_quantity,
             'perItemTotalPrice', oi.item_total
@@ -134,6 +139,8 @@ const queryUserOrderHistory = async (userId) => {
         orders AS o
       JOIN
         order_items AS oi ON o.id = oi.orders_id
+      JOIN
+        products AS p ON p.id = oi.product_id
       WHERE
         o.user_id = ?
       GROUP BY
