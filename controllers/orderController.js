@@ -26,17 +26,4 @@ const postUserOrderTotal = catchAsync(async (req, res) => {
   })
 })
 
-const getUserOrderHistory = catchAsync(async (req, res) => {
-  const userId = req.user.id
-  const orderHistory = await orderService.getUserOrderHistory(userId)
-  return res.status(200).json({
-    data: orderHistory,
-  })
-})
-
-export {
-  createUserOrder,
-  getUserOrder,
-  postUserOrderTotal,
-  getUserOrderHistory,
-}
+export { createUserOrder, getUserOrder, postUserOrderTotal }
