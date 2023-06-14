@@ -2,7 +2,6 @@ import {
   queryCreateUserOrder,
   queryOrderData,
   queryInsertOrderTotal,
-  queryUserOrderHistory,
 } from '../models/orderDao.js'
 
 const createUserOrder = async (userId) => {
@@ -17,13 +16,4 @@ const postUserOrderTotal = async (userId, orderTotal) => {
   return queryInsertOrderTotal(userId, orderTotal)
 }
 
-const getUserOrderHistory = async (userId) => {
-  return queryUserOrderHistory(userId)
-}
-
-export {
-  createUserOrder,
-  getUserOrder,
-  postUserOrderTotal,
-  getUserOrderHistory,
-}
+export { createUserOrder, getUserOrder, postUserOrderTotal }
