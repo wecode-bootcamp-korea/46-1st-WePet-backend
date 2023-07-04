@@ -121,7 +121,8 @@ Throughout the course of this project, we encountered several challenges that pr
 2. Run `npm install` to install the required npm packages.
 3. Ensure that you have a local MySQL server running and import the provided SQL dump file.
 4. Once you have completed the above steps, type `npm start` to start the server.
-5. For detailed information about the API endpoints, please refer to our WePet API Postman documentation provided below.
+5. Fill in the correct details in the `.env` sample.
+6. For detailed information about the API endpoints, please refer to our WePet API Postman documentation provided below.
 
 **_프로젝트를 실행하려면 다음 단계를 따르세요:_**
 
