@@ -1,20 +1,16 @@
-# 🐶 WePet 😸 RESTful API 🔗
+# 🐶 😸 WePet RESTful API
 
 </br>
 
-## Introduction / 소개 👋
+## 👋 Introduction / 소개
 
 Our project, the WePet RESTful API, was developed with the aim of creating an e-commerce platform that offers a carefully curated selection of unique and safe pet products for our beloved "dogs and cats." We recognized the need to cater to pet owners who view their furry companions as integral members of their families, rather than mere animals. Our goal was to address the specific challenges faced by these owners, such as the overwhelming variety of products available on the market and the trial-and-error process of finding the right ones. Extensive research revealed that our target audience primarily consisted of females in the 20s-40s age range who sought such a service. We believed that our platform would stand out by offering a thoughtfully curated collection of tested and high-quality products. To design our user interface and user experience, we drew inspiration from the simplicity and whimsical approach of [Baemin Stationary](https://brandstore.baemin.com/), which specializes in stationery, books, and gifts.
 
-WePet RESTful API 프로젝트는 사랑하는 "개와 고양이"를 위한 독특하고 안전한 애완동물 제품을 주목적으로 하는 플랫폼을 개발하는 데에 초점을 맞추었습니다. 우리는 애완동물 주인들이 단순히 동물이 아닌 가족 구성원으로 보는 보는 경향이 있다는 사실을 알게되었습니다. 우리의 목표는 시장에서 제공되는 다양한 제품들과 제품 선택에 따른 시행착오 과정과 같은 특정 도전에 대응하는 것이었습니다. 철저한 조사 결과, 우리의 주요 대상 고객은 20대에서 40대 여성들로 구성되었으며 이러한 서비스를 요구했습니다. 우리는 검증되고 고품질의 제품을 신중하게 선별하는 플랫폼을 제공함으로써 차별화될 수 있다고 믿었습니다. UI와 UX 디자인은 [배민문방구](https://brandstore.baemin.com/)의 간결하고 귀여운 접근 방식에서 영감을 받았습니다.
-
 </br>
 
-## Description / 설명 🥓
+## 🥓 Description / 설명
 
 Our backend API serves as the central point for handling CRUD (Create, Read, Update, Delete) operations for our frontend application. The API's endpoints are primarily categorized into the following:
-
-우리의 백엔드 API는 프론트엔드 애플리케이션의 CRUD(Create, Read, Update, Delete) 작업을 처리하는 지점으로 작동합니다. API의 엔드포인트는 다음과 같이 주로 분류됩니다:
 
 - **/users**
 - **/products**
@@ -27,7 +23,7 @@ The **users** endpoints enable users to create accounts, log in, and manage thei
 
 </br>
 
-## Tech / 기술 🧠
+## 🧠 Tech / 기술
 
 For this project, we selected a technology stack consisting of **Node.js, Express, TypeORM, and MySQL**. We chose these technologies based on their familiarity within our team, the simplicity it offers, and the rich ecosystem of packages and libraries available for it. Moreover, we recognized that our e-commerce site would heavily rely on real-time user interactions and event-driven processes, which made Node.js an ideal choice. Another advantage of this stack is the seamless handling of JSON data for communication with the frontend through the use of Express middleware. Our development team also adhered to Node.js best practices and adopted a layered pattern to organize our codebase and API structure effectively.
 
@@ -35,9 +31,9 @@ For this project, we selected a technology stack consisting of **Node.js, Expres
 
 </br>
 
-## Responsibilities / 책임부분 🍱
+## 🍱 Responsibilities / 책임부분
 
-### **관용님:**
+### **GwanYong 관용님:**
 
 WePet 백엔드 API구현 내용회원의 CRUD 에 해당하는 부분을 담당하였습니다회원의 접근이 수월할수 있도록 email과 password만으로 회원가입이 이루어질수있게 구현이메일 중복체크를 통하여 같은 email로 가입을 할 수 없도록 만들었습니다비밀번호는 8자리이상 문자와 숫자,특수문자를 포함하도록 구현했습니다 bcrypt로 비밀번호를 암호화 jwt토큰 발급을 통하여 로그인시 토큰이 생성되어 비밀번호가 databases상에 노출되지 않아 개인정보를 보호주문시, jwt를 통해 해당 유저만 주문 할 수 있도록 확인 절차로그인이 유지되는동안 토큰또한 유효하며 상품을 장바구니에 담고 결제 또한 가능하게 구현
 
@@ -55,7 +51,7 @@ During the registration process, users can change their email address, password,
 
 For members who have placed at least one order, I implemented a feature to delete their additional saved addresses, names, and phone numbers along with their account.
 
-### **팀님:**
+### **Tim 팀님:**
 
 What I aimed to achieve in my backend API service...
 
@@ -109,7 +105,7 @@ WePet 백엔드 API 서비스에서 시도한 구현은 다음과 같습니다..
 
 </br>
 
-## Learning points / 배운 점 🫀
+## 🫀 Learning points / 배운 점
 
 Throughout the course of this project, we encountered several challenges that provided valuable learning opportunities. One notable challenge was understanding the user flow and ensuring consistent JSON key data and response messages for efficient utilization by the frontend team. Additionally, we honed our skills in writing efficient SQL queries to optimize database performance.
 
@@ -117,7 +113,7 @@ Throughout the course of this project, we encountered several challenges that pr
 
 </br>
 
-## How to run our project / 프로젝트 실행 방법 🧩
+## 🧩 How to run our project / 프로젝트 실행 방법
 
 **_To run our project, follow these steps:_**
 
@@ -139,9 +135,9 @@ Throughout the course of this project, we encountered several challenges that pr
 
 </br>
 
-## Team Members 팀 구성원 👫
+## 👫 Team Members 팀 구성원
 
-### Front End / 프론트엔드 💅
+### 💅 Front End / 프론트엔드
 
 **[Front-End Team Github Project Link](https://github.com/wecode-bootcamp-korea/46-1st-WePet-frontend)**
 
@@ -149,7 +145,7 @@ Throughout the course of this project, we encountered several challenges that pr
 - [zozusin](https://github.com/AGNESBAEK)
 - [sstaar91](https://github.com/sstaar91)
 
-### Back End / 백엔드 🎒
+### 🎒 Back End / 백엔드
 
 **[Back-End Team Github Project Link ](https://github.com/wecode-bootcamp-korea/46-1st-WePet-backend)**
 
