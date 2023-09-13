@@ -144,7 +144,7 @@ Throughout the course of this project, we encountered several challenges that pr
 
 - [AGNESBAEK](https://github.com/AGNESBAEK)
 - [zozusin](https://github.com/AGNESBAEK)
-- [sstaar91](https://github.com/sstaar91)
+- [yeonn-k](https://github.com/yeonn-k)
 
 ### 🎒 Back End / 백엔드
 
